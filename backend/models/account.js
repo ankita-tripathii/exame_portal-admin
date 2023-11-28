@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
-const dataSchema = new mongoose.Schema({
+const accountSchema = new mongoose.Schema({
     name: {
         required: true,
         type: String,
         min: 6,
         max: 250
     },
-    emailId: { // Model validation regex
+    emailId: {
         required: true,
         type: String,
         min: 6,
@@ -18,12 +18,21 @@ const dataSchema = new mongoose.Schema({
         type: String,
         min: 6,
         max: 250
+    },
+    role: {
+        type: String,
+        enum: ['admin', 'delivery head'],
+        required: true     
+    },
+    isApproved: {
+        type: Boolean,
+        default: false
     }
 },
 {
   timestamps: true
 })
 
-module.exports = mongoose.model('AdminDetail', dataSchema)
+module.exports = mongoose.model('account', accountSchema)
 
  
