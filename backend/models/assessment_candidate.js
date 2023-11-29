@@ -1,22 +1,10 @@
 const mongoose = require('mongoose');
 
 const assessmentCandidateSchema = new mongoose.Schema({
-    assessment: {
-        id: {
+    assessment_id:  {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'assessment',
             required: true
-        },
-        title: {
-            type: String,
-            ref: 'assessment',
-            required: true
-        },
-        slot: {
-            type: Date,
-            ref: 'assessment',
-            required: true
-        }
     },
     organisation: {
         id: {

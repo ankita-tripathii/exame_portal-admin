@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose'); 
 const cors = require('cors'); //new add
 const routes = require('./routes/routes');
+const accountdashboard = require('./routes/accountdashboard');
 
 require('dotenv').config();   //new add
 
@@ -42,3 +43,4 @@ app.listen(port,()=> {
 })
 
 app.use('/api', routes);
+app.use('/api', accountdashboard);

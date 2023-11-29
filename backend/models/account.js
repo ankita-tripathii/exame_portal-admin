@@ -21,7 +21,7 @@ const accountSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'delivery head'],
+        enum: ['admin', 'delivery_head'],
         required: true     
     },
     isApproved: {

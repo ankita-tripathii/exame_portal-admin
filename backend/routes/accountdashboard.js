@@ -1,5 +1,5 @@
-const accountDetailModel = require('../model/account');
-const verify = require('./routeVarify');
+const accountDetailModel = require('../models/account');
+const verify = require('./accountVarify');
 
 const router = require('express').Router();
 

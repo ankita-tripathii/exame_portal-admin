@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const accountDetailModel = require('../model/account');
 
 // what is the use of next()
 module.exports = function async (req, res, next) {

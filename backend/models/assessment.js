@@ -6,16 +6,12 @@ const assessmentSchema = new mongoose.Schema({
         required: true,
         maxlength: 100
     },
-    duration: {
+    duration: { // Minutes
         type: Number,
         required: true
     },
     question_count: {
         type: Number,
-        required: true
-    },
-    slot: {
-        type: Date,
         required: true
     },
     organisation: {
