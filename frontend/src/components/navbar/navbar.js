@@ -13,15 +13,14 @@
     return (
       <>
          <Navbar expand="lg" className={styles.bgBodyTertiary} sticky="top" >
-        <Col lg={7} className={styles.brandstyle}  >
+        <Col lg={9} className={styles.brandstyle}  >
           <Navbar.Brand href="#" style={{color: 'white'}}>Online Examination</Navbar.Brand>
           </Col>
-          <Col lg={4} >
+          <Col lg={2} >
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
              <Nav className="me-auto" >
               <Nav.Link  href="/" style={{color: 'white'}}>Home</Nav.Link>
-              <Nav.Link href="/adminlogin" style={{color: 'white'}}>Admin Login</Nav.Link>
-              <Nav.Link href="/userlogin" style={{color: 'white'}}>User Login</Nav.Link>
+              <Nav.Link href="/login" style={{color: 'white'}}>Login</Nav.Link>
             </Nav> 
           </Col>
           </Navbar>   

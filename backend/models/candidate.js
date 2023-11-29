@@ -12,7 +12,7 @@ const candidateSchema = new mongoose.Schema({
         minlength: 6,
         maxlength: 100
     },
-    organisation: organisation: {
+    organisation: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'organisation',

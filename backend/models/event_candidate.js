@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const assessmentCandidateSchema = new mongoose.Schema({
+const eventCandidateSchema = new mongoose.Schema({
     assessment_id:  {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'assessment',
@@ -39,5 +39,5 @@ const assessmentCandidateSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('assessmentcandidate', assessmentCandidateSchema);
+module.exports = mongoose.model('assessmentcandidate', eventCandidateSchema);
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from "../components/navbar/navbar";
 import { Link } from 'react-router-dom';
 
-export default function AdminRegister() {
+export default function Register() {
     const [formData, setFormData] = useState({
         name: '',
         emailId: '',
@@ -46,7 +46,7 @@ export default function AdminRegister() {
         <>
             <Navbar />
             <div className="container my-3 py-3">
-                <h1 className="text-center">Admin Register</h1>
+                <h1 className="text-center">Register</h1>
                 <hr />
                 <div className="row my-4 h-100">
                     <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
@@ -82,7 +82,7 @@ export default function AdminRegister() {
                                 />
                             </div>
                             <div className="my-3">
-                                <p>Already have an account? <Link to="/adminlogin" className="text-decoration-underline text-info">Admin Login</Link> </p>
+                                <p>Already have an account? <Link to="/login" className="text-decoration-underline text-info">Login</Link> </p>
                             </div>
                             <div className="text-center">
                                 <button className="my-2 mx-auto btn btn-dark" type="submit">
