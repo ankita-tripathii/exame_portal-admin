@@ -16,13 +16,15 @@ const mongoString = process.env.DATABASE_URL   //new add
 // Express Initialize
 const app = express();
 
+app.use(express.json());
+
 app.use(cors());
 app.use(cors({
     origin: 'http://localhost:3000', // Replace with your frontend URL
     credentials: true // Enable credentials (if needed)
 }));
 
-app.use(express.json());
+
 
 const port = 5000; // on the server this port number should be free
 

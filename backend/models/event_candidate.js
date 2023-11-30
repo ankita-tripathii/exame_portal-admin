@@ -1,43 +1,47 @@
 const mongoose = require('mongoose');
 
 const eventCandidateSchema = new mongoose.Schema({
-    assessment_id:  {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'assessment',
-            required: true
-    },
+
     organisation: {
-        id: {
+        org_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'organisation',
             required: true
         },
-        name: {
+        org_name: {
             type: String,
             ref: 'organisation',
             required: true
         }
     },
     candidate: {
-        id: {
+        user_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'candidate',
             required: true
         },
-        name: {
+        user_name: {
             type: String,
             ref: 'candidate',
             required: true
         },
-        email: {
+        user_email: {
             type: String,
             ref: 'candidate',
             required: true
         }
     },
+    event:{
+        event_id:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'assessmentevents',
+            required: true
+        }
+    }
+  },
     {
   timestamps: true
 });
 
-module.exports = mongoose.model('assessmentcandidate', eventCandidateSchema);
+module.exports = mongoose.model('eventcandidate', eventCandidateSchema);
 

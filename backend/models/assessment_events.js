@@ -6,7 +6,7 @@ const assessmenteventsSchema = new mongoose.Schema({
          ref: 'assessment',
          required: true
     },
-    slot{
+    slot: {
         startDate: {
             type: Date,
             required: true
@@ -20,6 +20,7 @@ const assessmenteventsSchema = new mongoose.Schema({
             required: true
         }
     
+}
 },
 {
         timestamps: true

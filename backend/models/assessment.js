@@ -15,16 +15,17 @@ const assessmentSchema = new mongoose.Schema({
         required: true
     },
     organisation: {
-        id: {
+        org_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'organisation',
             required: true
         },
-        name: {
+        org_name: {
             type: String,
             ref: 'organisation',
             required: true
         }
+}
 },
 {
     timestamps: true

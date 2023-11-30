@@ -3,27 +3,15 @@ const express = require('express');
 const eventcandidateDetailModel = require('../models/event_candidate');
 
 
-const createeventcandidate = (async (req, res) => {
-    const {
-        assessment_id,
-        organisation: {id, name}
-        candidate:{id, name, email}
-    } = req.body;
-
-     const newassessmentcandidate = new eventcandidateDetailModel({
-        assessment_id,
-        organisation: {id, name}
-        candidate:{id, name, email}
-    })
-
-     try{
-        const dataToSave = await newassessmentcandidate.save(); // mongo save
-        res.status(200).json({ data: newassessmentcandidate , message: "new assessmentcandidate Created!"});
+const geteventcandidate = (async (req, res) => {
+    try {
+        const eventCandidates = await eventcandidateDetailModel.findById(req.params.event_id)
+            .populate("candidate");
+        res.status(200).json(eventCandidates)
     }
     catch(error){
-        res.status(400).json({message: "Sorry could not create new assessmentcandidate" }); //error.message
-        
+        res.status(500).json({message: error.message})
     }
 })
 
-exports.createeventcandidate = createeventcandidate;
+exports.geteventcandidate = geteventcandidate;

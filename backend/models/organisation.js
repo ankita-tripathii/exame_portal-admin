@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const organisationSchema = new mongoose.Schema({
-    name: {
+    org_name: {
         type: String,
         required: true,
         maxlength: 100
@@ -28,6 +28,9 @@ const organisationSchema = new mongoose.Schema({
                     maxlength: 20
                 }
     }
+   },
+    {
+  timestamps: true
     });
 
 module.exports = mongoose.model('organisation', organisationSchema);
