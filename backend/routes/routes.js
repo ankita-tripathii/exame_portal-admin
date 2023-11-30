@@ -28,7 +28,8 @@ const {createorganisation} = require('../services/organisation');
 const {updateorganisation} = require('../services/organisation');
 const {searchorgname} = require('../services/organisation');
 
-const{geteventcandidate} = require('../services/event_candidate')
+const {createeventcandidate} = require('../services/event_candidate');
+const{geteventcandidate} = require('../services/event_candidate');
 
 const router = express.Router()
 
@@ -60,6 +61,7 @@ router.post('/createorganisation', createorganisation);
 //router.put('/updateorganisation', updateorganisation);
 router.post('/searchorgname', searchorgname);
 
-router.get('/geteventcandidate/:assessment_event_id', geteventcandidate);
+router.post('/createeventcandidate', createeventcandidate);
+router.get('/geteventcandidate/:id', geteventcandidate);
 
 module.exports = router;
