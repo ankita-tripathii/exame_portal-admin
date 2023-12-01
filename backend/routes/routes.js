@@ -5,7 +5,7 @@ const express = require('express');
 const {signUP} = require("../services/account");
 const {logIN} = require("../services/account");
 
-const {allassessment} = require('../services/assessment');
+const {getAllAssessmentDetails} = require('../services/assessment');
 const {createassessment} = require('../services/assessment');
 const {updatedassessment} = require('../services/assessment');
 const {searchtitleANDorgname} = require('../services/assessment');
@@ -38,7 +38,7 @@ const router = express.Router()
 router.post('/signup', signUP);
 router.post('/login', logIN);
 
-router.get('/allassessment', allassessment);
+router.post('/getAllAssessmentDetails', getAllAssessmentDetails);
 router.post('/createassessment', createassessment);
 //router.put('/updatedassessment', updatedassessment);
 router.post('/searchtitleANDorgname', searchtitleANDorgname);

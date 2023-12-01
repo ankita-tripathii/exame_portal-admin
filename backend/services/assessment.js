@@ -2,17 +2,17 @@ const express = require('express');
 
 const assessmentDetailModel = require('../models/assessment');
 
- const allassessment = ( async (req, res) => {
-    try{
-        const data= await assessmentDetailModel.find();
-       res.status(200).json(data)
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    }
-})
+//  const allassessment = ( async (req, res) => {
+//     try{
+//         const data= await assessmentDetailModel.find();
+//        res.status(200).json(data)
+//     }
+//     catch(error){
+//         res.status(500).json({message: error.message})
+//     }
+// })
 
-exports.allassessment = allassessment;
+// exports.allassessment = allassessment;
 
 //----------------------------------------------------------------------
 
@@ -86,22 +86,64 @@ exports.updateassesment = updateassessment;
 //--------------------------------------------------------------------------------------------------
 
 
-const searchtitleANDorgname = ( async (req, res) => {
-     const SearchString = req.body.searchQuery;
+// const searchtitleANDorgname = ( async (req, res) => {
+//      const SearchString = req.body.searchQuery;
 
-     try{
-        let searchData = await assessmentDetailModel.find(
-                { $or: [{ title: {$regex: SearchString, $options: 'i'}},{"organisation.org_name":{$regex: SearchString, $options: 'i'}}]},
-                { title: 1, "organisation.org_name": 1}
-            );
+//      try{
+//         let searchData = await assessmentDetailModel.find(
+//                 { $or: [{ title: {$regex: SearchString, $options: 'i'}},{"organisation.org_name":{$regex: SearchString, $options: 'i'}}]},
+//                 { title: 1, "organisation.org_name": 1}
+//             );
 
-        res.status(200).json({ data: searchData , message: "title or org name searched!"});
-    }
-    catch(error){
-        res.status(400).json({message: "Sorry could not searched title or org name" });
+//         res.status(200).json({ data: searchData , message: "title or org name searched!"});
+//     }
+//     catch(error){
+//         res.status(400).json({message: "Sorry could not searched title or org name" });
         
-    }
-})
+//     }
+// })
 
-exports.searchtitleANDorgname = searchtitleANDorgname;
+// exports.searchtitleANDorgname = searchtitleANDorgname;
+
+
+//---------------------------------------------------------------------------------------------------
+
+const getAllAssessmentDetails = async (req, res) => {
+    const page = parseInt(req.query.page) || 1; // Current page, default: 1
+    const limit = parseInt(req.query.limit) || 5; // Number of records per page, default: 10
+    const SearchString = req.body.searchQuery;
+
+
+    const filters = {}; // You can modify this to include filtering criteria based on your requirements
+
+    if (SearchString) {
+        filters.$or = [
+            { title: { $regex: SearchString, $options: 'i' } },
+            { "organisation.org_name": { $regex: SearchString, $options: 'i' } }
+        ];
+    }
+
+
+    try {
+        const totalCount = await assessmentDetailModel.countDocuments(filters);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const data = await assessmentDetailModel.find(filters)
+            .limit(limit)
+            .skip((page - 1) * limit);
+
+        res.status(200).json({
+            currentPage: page,
+            totalPages,
+            totalCount,
+            data,
+            message: "Assessment details retrieved with pagination and filtering!"
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getAllAssessmentDetails = getAllAssessmentDetails;
+
 
