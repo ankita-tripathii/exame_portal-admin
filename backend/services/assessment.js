@@ -86,27 +86,56 @@ exports.updateassesment = updateassessment;
 //--------------------------------------------------------------------------------------------------
 
 
-const searchtitleANDorgname = ( async (req, res) => {
-     const SearchString = req.body.searchQuery;
+// const searchtitleANDorgname = ( async (req, res) => {
+//      const SearchString = req.body.searchQuery;
 
-     try{
-        let searchData = await assessmentDetailModel.find(
-                { $or: [{ title: {$regex: SearchString, $options: 'i'}},{"organisation.org_name":{$regex: SearchString, $options: 'i'}}]},
-                { title: 1, "organisation.org_name": 1}
+//      try{
+//         let searchData = await assessmentDetailModel.find(
+//                 { $or: [{ title: {$regex: SearchString, $options: 'i'}},{"organisation.org_name":{$regex: SearchString, $options: 'i'}}]},
+//                 { title: 1, "organisation.org_name": 1}
+//             );
+
+//         res.status(200).json({ data: searchData , message: "title or org name searched!"});
+//     }
+//     catch(error){
+//         res.status(400).json({message: "Sorry could not searched title or org name" });
+        
+//     }
+// })
+
+// exports.searchtitleANDorgname = searchtitleANDorgname;
+
+
+//---------------------------------------------------------------------------------------------------
+
+
+const searchtitleANDorgname = (async (req, res) => {
+    const SearchString = req.body.searchQuery;
+
+    try {
+        if (SearchString === null || SearchString === undefined) {
+            const allAssessments = await assessmentDetailModel.find();
+            res.status(200).json({ data: allAssessments, message: "All assessments retrieved!" });
+        } else {
+            let searchData = await assessmentDetailModel.find(
+                {
+                    $or: [
+                        { title: { $regex: SearchString, $options: 'i' } },
+                        { "organisation.org_name": { $regex: SearchString, $options: 'i' } }
+                    ]
+                },
+                { title: 1, "organisation.org_name": 1 }
             );
 
-        res.status(200).json({ data: searchData , message: "title or org name searched!"});
-    }
-    catch(error){
-        res.status(400).json({message: "Sorry could not searched title or org name" });
-        
+            res.status(200).json({ data: searchData, message: "Title or org name searched!" });
+        }
+    } catch (error) {
+        res.status(400).json({ message: "Sorry, could not search title or org name" });
     }
 })
 
 exports.searchtitleANDorgname = searchtitleANDorgname;
 
-
-//---------------------------------------------------------------------------------------------------
 
 
 
