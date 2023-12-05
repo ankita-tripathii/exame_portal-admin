@@ -1,5 +1,5 @@
 const express = require('express');
-
+const adminApprovedMiddleware = require('../routes/accountvarify');
 const organisationDetailModel = require('../models/organisation');
 
 
@@ -20,7 +20,10 @@ exports.allorganisation = allorganisation;
 
 
 const createorganisation = (async (req, res) => {
-    const {
+
+     try{
+        await adminApprovedMiddleware(req, res, async () => {
+            const {
         org_name,
         location: {state, pincode},
         contact: {emailId, contactNo}
@@ -31,10 +34,9 @@ const createorganisation = (async (req, res) => {
         location: {state, pincode},
         contact: {emailId, contactNo}
     })
-
-     try{
         const dataToSave = await neworganisation.save(); // mongo save
         res.status(200).json({ data: neworganisation , message: "new organisation Created!"});
+    });
     }
     catch(error){
         res.status(400).json({message: "Sorry could not create new organisation" }); //error.message
@@ -47,15 +49,15 @@ exports.createorganisation = createorganisation;
 //----------------------------------------------------------------------------------------------
 
 const updateorganisation = (async (req, res) => {
-     const {
+
+     try{
+        await adminApprovedMiddleware(req, res, async () => {
+             const {
         org_id,
         org_name,
         location: {state, pincode},
         contact: {emailId, contactNo}
-    } = req.body;
-
-     try{
-
+         } = req.body;
         const updatedorganisation = await organisationDetailModel.findOneAndUpdate({"_id":org_id}, 
             {
                 $set: {
@@ -74,6 +76,7 @@ const updateorganisation = (async (req, res) => {
         }
 
         res.status(200).json({ data: updatedorganisation , message: "organisation detail updated!"});
+    });
     }
     catch(error){
         res.status(400).json({message: error.message }); //error.message

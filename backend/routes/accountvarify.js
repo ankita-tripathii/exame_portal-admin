@@ -9,14 +9,13 @@ module.exports = function async (req, res, next) {
 	 	jwt.verify(token, process.env.TOKEN_SECRET, function(err, decoded) {
   				if (err) { 
   					return res.status(400).json({message: "Token Expired please re-login" });
-  				}else{
-  					req.body.emailIdQuery = decoded.emailId;
-  					console.log(decoded.emailId);
-  					req.body.role = decoded.role;
-
-  					next();
-
-  				}
-
+  				}else {
+            const { emailId, role, isApproved } = decoded;
+            if (role !== 'admin' && !isApproved) {
+                return res.status(403).json({ message: 'Unauthorized access.' });
+            }
+            req.decodedToken = decoded; // Attaching decoded token data to the request object
+            next();
+        }
   		});
 };

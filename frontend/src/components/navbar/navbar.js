@@ -12,7 +12,7 @@
   export default function Navbarexample() {
     return (
       <>
-         <Navbar expand="lg" className={styles.bgBodyTertiary} sticky="top" >
+         <Navbar expand="lg" className={styles.bgBodyTertiary} sticky="top"  bg="light" data-bs-theme="light">
         <Col lg={9} className={styles.brandstyle}  >
           <Navbar.Brand href="#" style={{color: 'white'}}>Online Examination</Navbar.Brand>
           </Col>

@@ -1,6 +1,7 @@
 const express = require('express');
 
 const assessmentDetailModel = require('../models/assessment');
+const adminApprovedMiddleware = require('../routes/accountvarify');
 
  const allassessment = ( async (req, res) => {
     try{
@@ -18,44 +19,45 @@ exports.allassessment = allassessment;
 
 
 const createassessment = (async (req, res) => {
-    const {
-        title,
-        duration,
-        question_count,
-        organisation: {org_id, org_name}
-    } = req.body;
+    try {
+        await adminApprovedMiddleware(req, res, async () => {
+            const {
+                title,
+                duration,
+                question_count,
+                organisation: { org_id, org_name }
+            } = req.body;
 
-     const newassessment = new assessmentDetailModel({
-        title,
-        duration,
-        question_count,
-        organisation: {org_id, org_name}
-    })
+            const newassessment = new assessmentDetailModel({
+                title,
+                duration,
+                question_count,
+                organisation: { org_id, org_name }
+            });
 
-     try{
-        const dataToSave = await newassessment.save(); // mongo save
-        res.status(200).json({ data: newassessment , message: "new assessment Created!"});
+            const dataToSave = await newassessment.save();
+            res.status(200).json({ data: newassessment, message: 'New assessment created!' });
+        });
+    } catch (error) {
+        res.status(400).json({ message: 'Sorry, could not create new assessment' });
     }
-    catch(error){
-        res.status(400).json({message: "Sorry could not create new assessment" }); //error.message
-        
-    }
-})
+});
+
 
 exports.createassessment = createassessment;
 
 //-----------------------------------------------------------------------------------------------------
 
 const updateassessment = (async (req, res) => {
-     const {
-        assessment_id,
-        title,
-        duration,
-        question_count,
-        organisation: {org_id, org_name}
-    } = req.body;
 
      try{
+        await adminApprovedMiddleware(req, res, async () => {
+            const {
+                title,
+                duration,
+                question_count,
+                organisation: { org_id, org_name }
+            } = req.body;
 
         const updatedassessment = await assessmentDetailModel.findOneAndUpdate({"_id":assessment_id, "organisation.org_id": org_id}, 
         	{
@@ -74,6 +76,7 @@ const updateassessment = (async (req, res) => {
         }
 
         res.status(200).json({ data: updatedassessment , message: "assessment updated!"});
+    });
     }
     catch(error){
         res.status(400).json({message: error.message }); //error.message

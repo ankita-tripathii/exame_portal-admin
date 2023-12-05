@@ -1,5 +1,5 @@
 const express = require('express');
-
+const adminApprovedMiddleware = require('../routes/accountvarify');
 const candidateDetailModel = require('../models/candidate');
 
 
@@ -19,21 +19,24 @@ exports.allcandidate = allcandidate;
 
 
 const createcandidate = (async (req, res) => {
-    const {
+
+     try{
+        await adminApprovedMiddleware(req, res, async () => {
+            const {
         user_name,
         user_email,
         organisation: {org_id, org_name}
-    } = req.body;
+         } = req.body;
 
      const newcandidate = new candidateDetailModel({
         user_name,
         user_email,
         organisation: {org_id, org_name}
-    })
+         })
 
-     try{
         const dataToSave = await newcandidate.save(); // mongo save
         res.status(200).json({ data: newcandidate , message: "new candidate Created!"});
+    });
     }
     catch(error){
         res.status(400).json({message: "Sorry could not create new candidate" }); //error.message
@@ -46,16 +49,16 @@ exports.createcandidate = createcandidate;
 //--------------------------------------------------------------------------------------------------
 
 const updatecandidate = (async (req, res) => {
-     const {
+
+     try{
+        await adminApprovedMiddleware(req, res, async () => {
+            const {
         candidate_id,
         user_name,
         user_email,
         organisation: {org_id, org_name}
-    } = req.body;
-
-     try{
-
-        const updatedcandidate = await candidateDetailModel.findOneAndUpdate({"_id":candidate_id, "organisation.org_id": org_id}, 
+         } = req.body;
+            const updatedcandidate = await candidateDetailModel.findOneAndUpdate({"_id":candidate_id, "organisation.org_id": org_id}, 
             {
                 $set: {
                     "user_name": user_name,
@@ -71,6 +74,7 @@ const updatecandidate = (async (req, res) => {
         }
 
         res.status(200).json({ data: updatedcandidate , message: "candidate detail updated!"});
+    });
     }
     catch(error){
         res.status(400).json({message: error.message }); //error.message
