@@ -1,0 +1,22 @@
+
+.bgimage {
+  background-size: cover;
+  height: 660px;
+  width: 100%; 
+  background: linear-gradient(to right, #7071E8, #9907facc), url('carousel-2.jpg');
+}
+
+
+.headingtext{
+  color: #fff; /* Adjust text color for visibility */
+  text-align: left;
+  font-weight: bold;
+  margin-top: 250px;
+}
+
+.paratext{
+  color: #fff;
+  font-weight: normal;
+}
+
+

@@ -1,11 +1,9 @@
 import React from "react";
-import Navbar from "../components/navbar/navbar";
 import { Link } from "react-router-dom";
 
 export default function Login (){
   return (
     <>
-      <Navbar/>
       <div className="container my-3 py-3">
         <h1 className="text-center">Login</h1>
         <hr />
