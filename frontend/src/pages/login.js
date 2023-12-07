@@ -5,7 +5,7 @@ export default function Login (){
   return (
     <>
       <div className="container my-3 py-3">
-        <h1 className="text-center">Login</h1>
+        <h1 style={{color: "#7071E8"}}className="text-center">Login</h1>
         <hr />
         <div class="row my-4 h-100">
           <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
@@ -29,10 +29,10 @@ export default function Login (){
                 />
               </div>
               <div className="my-3">
-                <p>New Here? <Link to="/register" className="text-decoration-underline text-info">Register</Link> </p>
+                <p>New Here? <Link to="/register" style={{color:"#7071E8"}} >Register</Link> </p>
               </div>
               <div className="text-center">
-                <button class="my-2 mx-auto btn btn-dark" type="submit" disabled>
+                <button className="btn" style={{backgroundColor:"#7071E8", color:"white"}} type="submit">
                  Login
                 </button>
               </div>

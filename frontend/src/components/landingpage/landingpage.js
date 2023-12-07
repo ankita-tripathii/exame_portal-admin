@@ -12,7 +12,7 @@ const LandingPage = () => {
       <Navbar bg="transparent" expand="lg" variant="dark" fixed="top">
         <Container>
         <Col lg={9}>
-          <Navbar.Brand href="/">ExamZing</Navbar.Brand>
+          <Navbar.Brand href="/event">ExamZing</Navbar.Brand>
           </Col>
 
           <Col lg={2}>

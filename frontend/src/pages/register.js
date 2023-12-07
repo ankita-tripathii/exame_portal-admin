@@ -44,7 +44,7 @@ export default function Register() {
     return (
         <>
             <div className="container my-3 py-3">
-                <h1 className="text-center">Register</h1>
+                <h1 style={{color: "#7071E8"}} className="text-center">Register</h1>
                 <hr />
                 <div className="row my-4 h-100">
                     <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
@@ -80,10 +80,10 @@ export default function Register() {
                                 />
                             </div>
                             <div className="my-3">
-                                <p>Already have an account? <Link to="/login" className="text-decoration-underline text-info">Login</Link> </p>
+                                <p>Already have an account? <Link to="/login" style={{color:"#7071E8"}}>Login</Link> </p>
                             </div>
                             <div className="text-center">
-                                <button className="my-2 mx-auto btn btn-dark" type="submit">
+                                <button className="btn" style={{backgroundColor:"#7071E8", color:"white"}} type="submit">
                                     Register
                                 </button>
                             </div>
