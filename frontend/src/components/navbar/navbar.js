@@ -4,7 +4,7 @@
   import { Navbar, Container, Nav, NavDropdown} from 'react-bootstrap';
   import Button from 'react-bootstrap/Button';
   import ListGroup from 'react-bootstrap/ListGroup';
-  import Row from 'react-bootstrap/Row';
+  // import Row from 'react-bootstrap/Row';
   import Col from 'react-bootstrap/Col';
   import { PersonCircle} from 'react-bootstrap-icons';
   import { List} from 'react-bootstrap-icons';
@@ -35,9 +35,9 @@ const DNavbar = () => {
              </Offcanvas.Header>
              <Offcanvas.Body>
                <ListGroup variant="flush">
-                <ListGroup.Item action variant="light">Organisation</ListGroup.Item>
-                <ListGroup.Item action variant="light">Assessment</ListGroup.Item>
-                <ListGroup.Item action variant="light">Candidate</ListGroup.Item>
+                <ListGroup.Item href="/organisation" action >Organisation</ListGroup.Item>
+                <ListGroup.Item href="/assessment" action >Assessment</ListGroup.Item>
+                <ListGroup.Item href="candidate" action >Candidate</ListGroup.Item>
               </ListGroup>
              </Offcanvas.Body>
            </Offcanvas>

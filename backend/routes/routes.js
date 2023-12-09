@@ -8,7 +8,7 @@ const {logIN} = require("../services/account");
 const {allassessment} = require('../services/assessment');
 const {createassessment} = require('../services/assessment');
 const {updatedassessment} = require('../services/assessment');
-const {searchtitleANDorgname} = require('../services/assessment');
+
 
 
 const {allevent} = require('../services/assessment_events');
@@ -26,7 +26,6 @@ const {searchcandidate} = require('../services/candidate');
 const {allorganisation} = require('../services/organisation');
 const {createorganisation} = require('../services/organisation');
 const {updateorganisation} = require('../services/organisation');
-const {searchorgname} = require('../services/organisation');
 
 const {createeventcandidate} = require('../services/event_candidate');
 const{geteventcandidate} = require('../services/event_candidate');
@@ -38,10 +37,10 @@ const router = express.Router()
 router.post('/signup', signUP);
 router.post('/login', logIN);
 
-router.get('/allassessment', allassessment);
+router.post('/allassessment', allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
 //router.put('/updatedassessment', adminApprovedMiddleware, updatedassessment);
-router.post('/searchtitleANDorgname', searchtitleANDorgname);
+
 
 
 router.post('/allevent', allevent);
@@ -56,10 +55,9 @@ router.post('/createcandidate', adminApprovedMiddleware, createcandidate);
 router.post('/searchcandidate', searchcandidate);
 
 
-router.get('/allorganisation', allorganisation);
+router.post('/allorganisation', allorganisation);
 router.post('/createorganisation', adminApprovedMiddleware, createorganisation);
 //router.put('/updateorganisation', adminApprovedMiddleware, updateorganisation);
-router.post('/searchorgname', searchorgname);
 
 router.post('/createeventcandidate', adminApprovedMiddleware, createeventcandidate);
 router.get('/geteventcandidate/:id', geteventcandidate);

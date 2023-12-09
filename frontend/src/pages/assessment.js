@@ -7,7 +7,7 @@
 
 
 
- const Event = () => {
+ const Assessment = () => {
   return (
      <>
      <Stack gap={2}>
@@ -26,4 +26,4 @@
   	);
 }
 
-export default Event;
+export default Assessment;

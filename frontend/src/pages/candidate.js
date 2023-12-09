@@ -7,7 +7,7 @@
 
 
 
- const Event = () => {
+ const Candidate = () => {
   return (
      <>
      <Stack gap={2}>
@@ -26,4 +26,4 @@
   	);
 }
 
-export default Event;
+export default Candidate;

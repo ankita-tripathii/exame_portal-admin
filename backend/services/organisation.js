@@ -4,19 +4,6 @@ const organisationDetailModel = require('../models/organisation');
 
 
 
-const allorganisation = ( async (req, res) => {
-    try{
-        const data= await organisationDetailModel.find();
-       res.status(200).json(data)
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    }
-})
-
-exports.allorganisation = allorganisation;
-
-//----------------------------------------------------------------
 
 
 const createorganisation = (async (req, res) => {
@@ -89,21 +76,27 @@ exports.updateorganisation = updateorganisation;
 
 //-----------------------------------------------------------------------------------------------
 
-const searchorgname = ( async (req, res) => {
-     const orgnameSearchString = req.body.searchQuery;
 
-     try{
-        let searchData = await organisationDetailModel.find(
-                { org_name: {$regex: orgnameSearchString, $options: 'i'}},
-                { org_name: 1}
+
+
+const allorganisation = (async (req, res) => {
+    const SearchString = req.body.searchQuery;
+
+    try {
+        if (SearchString === null || SearchString === undefined) {
+            let allOrganisation = await organisationDetailModel.find();
+            res.status(200).json({ data: allOrganisation, message: "All organisation retrieved!" });
+        } else {
+            let searchData = await organisationDetailModel.find(
+                        { org_name: { $regex: SearchString, $options: 'i' }},
+                        { org_name: 1, "location.state": 1, "location.pincode": 1, "contact.emailId": 1, "contact.contactNo": 1}
             );
 
-        res.status(200).json({ data: searchData , message: "org name searched!"});
-    }
-    catch(error){
-        res.status(400).json({message: "Sorry could not searched org name" });
-        
+            res.status(200).json({ data: searchData, message: "org name searched!" });
+        }
+    } catch (error) {
+        res.status(400).json({ message: "Sorry, could not search org name" });
     }
 })
 
-exports.searchorgname = searchorgname;
+exports.allorganisation = allorganisation;
