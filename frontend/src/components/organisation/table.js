@@ -1,9 +1,8 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from "react-bootstrap/Container";
+import { PencilSquare } from 'react-bootstrap-icons';
 import styles from "./organisation.module.css";
 
 const TableComponent = ({ data }) => {
@@ -19,6 +18,7 @@ const TableComponent = ({ data }) => {
                     <th>Pincode</th>
                     <th>Email Id</th>
                     <th>Contact No</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +29,7 @@ const TableComponent = ({ data }) => {
                                 <td>{organisation.location?.pincode || 'N/A'}</td>
                                 <td>{organisation.contact?.emailId || 'N/A'}</td>
                                 <td>{organisation.contact?.contactNo || 'N/A'}</td>
+                                <td><PencilSquare/></td>
                     </tr>
                 ))}
             </tbody>

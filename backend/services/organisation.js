@@ -13,13 +13,15 @@ const createorganisation = (async (req, res) => {
             const {
         org_name,
         location: {state, pincode},
-        contact: {emailId, contactNo}
+        contact: {emailId, contactNo},
+        isApproved 
     } = req.body;
 
      const neworganisation = new organisationDetailModel({
         org_name,
         location: {state, pincode},
-        contact: {emailId, contactNo}
+        contact: {emailId, contactNo},
+        isApproved
     })
         const dataToSave = await neworganisation.save(); // mongo save
         res.status(200).json({ data: neworganisation , message: "new organisation Created!"});

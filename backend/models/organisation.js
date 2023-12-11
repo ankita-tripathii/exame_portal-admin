@@ -27,6 +27,10 @@ const organisationSchema = new mongoose.Schema({
                     type: String,
                     maxlength: 20
                 }
+    },
+    isApproved: {
+        type: Boolean,
+        default: false
     }
    },
     {

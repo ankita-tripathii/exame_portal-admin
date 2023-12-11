@@ -1,13 +1,16 @@
 import React, { useState }  from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Alert } from "react-bootstrap";
 
 
 export default function Login (){
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
+   const [alertVariant, setAlertVariant] = useState(""); // Variant for different alert styles
+  const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,26 +33,33 @@ export default function Login (){
 
       if (response.ok) {
         localStorage.setItem("token", data.token); // Store token in localStorage
-        setModalMessage("Login Successful!");
-        setModalOpen(true);
-
+        setAlertVariant("success");
+        setAlertMessage("Login Successful!");
+        setShowAlert(true);
+         
+        // Redirect to another page after successful login
+        setTimeout(() => {
+          navigate('/event');
+        }, 2000); // Redirect after 2 seconds
     
 
       } else {
-        setModalMessage(data.message);
-        setModalOpen(true);
+        setAlertVariant("danger");
+        setAlertMessage(data.message);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
       }
     } catch (error) {
-      setModalMessage("An error occurred");
-      setModalOpen(true);
+      setAlertVariant("danger");
+      setAlertMessage("An error occurred");
+      setShowAlert(true);
       console.error("Error:", error);
+      setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
+
     }
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
+ 
 
   return (
     <>
@@ -85,37 +95,30 @@ export default function Login (){
                 <p>New Here? <Link to="/register" style={{color:"#7071E8"}} >Register</Link> </p>
               </div>
               <div className="text-center">
-                <button className="btn" style={{backgroundColor:"#7071E8", color:"white"}} type="submit"><Link to="/event"style={{color:"white"}}>
-                 Login</Link>
+                <button className="btn" style={{backgroundColor:"#7071E8", color:"white"}} type="submit">Login
                 </button>
               </div>
             </form>
-
-            {/* Modal for displaying messages */}
-      {modalOpen && (
-        <div className="modal" style={{ display: "block"}}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Login Status</h5>
-                <button type="button" className="close" onClick={closeModal}>
-                  &times;
-                </button>
-              </div>
-              <div className="modal-body">{modalMessage}</div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={closeModal}>
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
           </div>
         </div>
       </div>
+
+      {showAlert && (
+        <div
+          style={{
+            position: "fixed",
+            top: "10px",
+            right: "100px",
+            zIndex: 9999,
+          }}
+        >
+          <Alert
+            variant={alertVariant}
+          >
+            {alertMessage}
+          </Alert>
+          </div>
+      )}
       
     </>
   );

@@ -72,7 +72,7 @@ const logIN = (async (req, res) => {
 
      try{
         const token = jwt.sign({emailId: emailExists.emailId, name: emailExists.name, role: emailExists.role}, process.env.TOKEN_SECRET,  {expiresIn: '1800s' });
-    res.status(200).json({ token: token, name: emailExists.name, role: emailExists.role});
+    res.status(200).json({ token: token});
     }
 
      catch (error) {

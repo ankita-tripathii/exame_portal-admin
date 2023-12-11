@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert } from "react-bootstrap";
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -10,8 +11,10 @@ export default function Register() {
     isApproved: false
     });
 
-    const [modalMessage, setModalMessage] = useState('');
-    const [showModal, setShowModal] = useState(false);
+   const [alertVariant, setAlertVariant] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
     const handleInputChange = (e) => {
     const { id, value, type } = e.target;
@@ -42,24 +45,29 @@ export default function Register() {
             const result = await response.json();
 
             if (response.ok) {
-                setModalMessage('User signup successful!');
+                setAlertVariant('success');
+                setAlertMessage('User signup successful!');
+                setShowAlert(true);
+                
+                setTimeout(() => {
+                   navigate('/event');
+                     }, 2000); // Redirect after 2 seconds
             } else {
-                setModalMessage(result.message || 'An error occurred');
-            }
+                setAlertVariant('danger');
+                setAlertMessage(result.message || 'An error occurred');
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
+                 }
         } catch (error) {
+            setAlertVariant('danger');
+            setAlertMessage('An error occurred');
+            setShowAlert(true);  
+            setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds    
             console.error('Error:', error);
             // Handle error, show error message to the user, etc.
         }
-        finally {
-            setShowModal(true);
-        }
     };
      
-      const closeModal = () => {
-        setShowModal(false);
-        setModalMessage('');
-    };
-
 
     return (
         <>
@@ -115,38 +123,27 @@ export default function Register() {
                                 <p>Already have an account? <Link to="/login" style={{color:"#7071E8"}}>Login</Link> </p>
                             </div>
                             <div className="text-center">
-                                <button className="btn" href="/event" style={{backgroundColor:"#7071E8", color:"white"}} type="submit">
-                                    Register
+                                <button className="btn" style={{backgroundColor:"#7071E8", color:"white"}} type="submit">Register
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
-
-                         {showModal && (
-                    <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Message</h5>
-                                    <button type="button" className="close" onClick={closeModal}>
-                                        <span>&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <p>{modalMessage}</p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={closeModal}>
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
             </div>
+            {showAlert && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '10px',
+              right: '100px',
+              zIndex: 9999,
+            }}
+          >
+            <Alert variant={alertVariant}>
+              {alertMessage}
+            </Alert>
+          </div>
+        )}
         </>
     );
 }

@@ -1,19 +1,40 @@
 import React, { useState } from 'react';
+import styles from "./organisation.module.css";
 import { Modal, Form, Button } from 'react-bootstrap';
 
 const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
   const [orgData, setOrgData] = useState({
     org_name: '',
+  location: {
     state: '',
     pincode: '',
+  },
+  contact: {
     emailId: '',
-    contactNo: ''
+    contactNo: '',
+  },
+  isApproved: false
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const { name, value } = e.target;
+  const [fieldName, subFieldName] = name.split('.'); // Split the name to handle nested objects
+
+  if (subFieldName) {
+    // If the field has a subfield (nested object), update it properly
+    setOrgData({
+      ...orgData,
+      [fieldName]: {
+        ...orgData[fieldName],
+        [subFieldName]: value,
+      },
+    });
+  } else {
+    // If it's a top-level field, update as before
     setOrgData({ ...orgData, [name]: value });
-  };
+  }
+};
+
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -41,8 +62,8 @@ const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>State</Form.Label>
             <Form.Control
               type="text"
-              name="state"
-              value={orgData.state}
+              name="location.state"
+              value={orgData.location.state}
               onChange={handleInputChange}
               required
             />
@@ -51,8 +72,8 @@ const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>Pincode</Form.Label>
             <Form.Control
               type="text"
-              name="pincode"
-              value={orgData.pincode}
+              name="location.pincode"
+              value={orgData.location.pincode}
               onChange={handleInputChange}
               required
             />
@@ -61,8 +82,8 @@ const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>Email ID</Form.Label>
             <Form.Control
               type="email"
-              name="emailId"
-              value={orgData.emailId}
+              name="contact.emailId"
+              value={orgData.contact.emailId}
               onChange={handleInputChange}
               required
             />
@@ -71,15 +92,17 @@ const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>Contact Number</Form.Label>
             <Form.Control
               type="text"
-              name="contactNo"
-              value={orgData.contactNo}
+              name="contact.contactNo"
+              value={orgData.contact.contactNo}
               onChange={handleInputChange}
               required
             />
           </Form.Group><br/>
-          <Button variant="primary" type="submit">
+          <div className="d-flex justify-content-center">
+          <Button className={styles.orgbtn} variant="primary" type="submit">
             Create Organization
           </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>
