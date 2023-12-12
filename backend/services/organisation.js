@@ -41,8 +41,9 @@ const updateorganisation = (async (req, res) => {
 
      try{
         await adminApprovedMiddleware(req, res, async () => {
+            const org_id = req.params.org_id;
+
              const {
-        org_id,
         org_name,
         location: {state, pincode},
         contact: {emailId, contactNo}
@@ -83,11 +84,19 @@ exports.updateorganisation = updateorganisation;
 
 const allorganisation = (async (req, res) => {
     const SearchString = req.body.searchQuery;
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const pageSize = parseInt(req.query.pageSize) || 6; // Number of items per page
 
     try {
+            let query = {};
+
         if (SearchString === null || SearchString === undefined) {
-            let allOrganisation = await organisationDetailModel.find();
-            res.status(200).json({ data: allOrganisation, message: "All organisation retrieved!" });
+
+            const totalCount = await organisationDetailModel.countDocuments();
+
+            let allOrganisation = await organisationDetailModel.find().skip((page - 1) * pageSize).limit(pageSize);
+
+            res.status(200).json({ data: allOrganisation, currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalItems: totalCount, message: "All organisation retrieved!" });
         } else {
             let searchData = await organisationDetailModel.find(
                         { org_name: { $regex: SearchString, $options: 'i' }},

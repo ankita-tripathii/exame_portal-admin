@@ -108,7 +108,7 @@ export default function Login (){
           style={{
             position: "fixed",
             top: "10px",
-            right: "100px",
+            right: "10px",
             zIndex: 9999,
           }}
         >

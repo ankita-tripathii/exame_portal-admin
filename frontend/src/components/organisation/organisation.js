@@ -1,27 +1,30 @@
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/Container";
-import { Modal} from 'react-bootstrap';
 import styles from "./organisation.module.css";
 import React, { useState, useEffect } from 'react';
 import TableComponent from './table';
 import CreateOrganizationModal from "./create_org_modal";
+import { Pagination } from 'react-bootstrap';
 import SearchBar from './searchbar';
+import { jwtDecode} from 'jwt-decode'; 
+
 import { Alert } from "react-bootstrap";
 
 const OrganisationList = () => {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-   
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
      
 
      useEffect(() => {
         fetchData();
-    }, []);
+    }, [currentPage, searchQuery]);
 
     const fetchData = async (query) => {
         try {
-            const response = await fetch('http://localhost:5000/api/allorganisation', {
+            const response = await fetch(`http://localhost:5000/api/allorganisation?page=${currentPage}&pageSize=6`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,6 +33,7 @@ const OrganisationList = () => {
             });
             const result = await response.json();
             setData(result.data);
+            setTotalPages(result.totalPages);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -37,8 +41,14 @@ const OrganisationList = () => {
 
 const handleSearch = (e) => {
         e.preventDefault();
+        setCurrentPage(1);
         fetchData(searchQuery);
     };
+
+    const handlePagination = (page) => {
+        setCurrentPage(page);
+    };
+
 //-------------------------------------------------------------------------------------
 
   const [showModal, setShowModal] = useState(false);// for show modal
@@ -57,7 +67,8 @@ const handleSearch = (e) => {
 
     // Retrieve the token from localStorage
     const authToken = localStorage.getItem('token');
-
+    const decodedToken = jwtDecode(authToken); 
+    
 
     const response = await fetch('http://localhost:5000/api/createorganisation', {
       method: 'POST',
@@ -90,7 +101,7 @@ const handleSearch = (e) => {
     }
   } catch (error) {
             setAlertVariant('danger');
-            setAlertMessage('An error occurred');
+            setAlertMessage(error.message);
             setShowAlert(true);  
             setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
             console.error('Error creating organization:', error);
@@ -110,26 +121,26 @@ const handleSearch = (e) => {
                     <button className="btn btn-primary mr-2" onClick={handleShowModal}>Create Organisation</button>
                 </div>
             </Col>
+           
             </Row><br/>
             <Row>
             <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
             </Row><br/>
             <Row>
-            <TableComponent data={data} />
+            <TableComponent data={data} fetchData={fetchData}/>
             </Row>
             <CreateOrganizationModal
         show={showModal}
         handleClose={handleCloseModal}
         handleSubmit={handleCreate}
       />
-        </Container>
 
-         {showAlert && (
+      {showAlert && (
           <div
             style={{
               position: 'fixed',
               top: '10px',
-              right: '100px',
+              right: '10px',
               zIndex: 9999,
             }}
           >
@@ -137,9 +148,27 @@ const handleSearch = (e) => {
               {alertMessage}
             </Alert>
           </div>
-        )};
+        )}
+      <Col lg={12} className="d-flex justify-content-center">
+                <Row className="justify-content-center">
+                    <Pagination>
+                        {[...Array(totalPages).keys()].map((page) => (
+                            <Pagination.Item
+                                key={page + 1}
+                                active={currentPage === page + 1}
+                                onClick={() => handlePagination(page + 1)}
+                            >
+                                {page + 1}
+                            </Pagination.Item>
+                        ))}
+                    </Pagination>
+                </Row>
+                </Col>
+        </Container>
+
+         
         </>
     );
-};
+}
 
 export default OrganisationList;

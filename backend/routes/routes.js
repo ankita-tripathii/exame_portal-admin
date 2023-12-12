@@ -57,7 +57,7 @@ router.post('/searchcandidate', searchcandidate);
 
 router.post('/allorganisation', allorganisation);
 router.post('/createorganisation', adminApprovedMiddleware, createorganisation);
-router.put('/updateorganisation', adminApprovedMiddleware, updateorganisation);
+router.put('/updateorganisation/:org_id', adminApprovedMiddleware, updateorganisation);
 
 router.post('/createeventcandidate', adminApprovedMiddleware, createeventcandidate);
 router.get('/geteventcandidate/:id', geteventcandidate);
