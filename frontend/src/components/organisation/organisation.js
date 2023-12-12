@@ -60,6 +60,8 @@ const handleSearch = (e) => {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
 
+   const [userRole, setUserRole] = useState('');
+   const [userApproved, setUserApproved] = useState('');
 
 
   const handleCreate = async (orgData) => {
@@ -67,8 +69,12 @@ const handleSearch = (e) => {
 
     // Retrieve the token from localStorage
     const authToken = localStorage.getItem('token');
-    const decodedToken = jwtDecode(authToken); 
-    
+   if (authToken) {
+     const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
+      setUserRole(decodedToken.role);
+      setUserApproved(decodedToken.isApproved);
+    }
+  
 
     const response = await fetch('http://localhost:5000/api/createorganisation', {
       method: 'POST',
@@ -116,18 +122,19 @@ const handleSearch = (e) => {
             <Col lg={8}>
             <h1 >Organisation Data</h1>
             </Col>
+            {(userRole === 'admin' && userApproved === true) ? (
             <Col lg={4}>
                <div className="ml-auto">
                     <button className="btn btn-primary mr-2" onClick={handleShowModal}>Create Organisation</button>
                 </div>
             </Col>
-           
+           ) : null}
             </Row><br/>
             <Row>
             <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
             </Row><br/>
             <Row>
-            <TableComponent data={data} fetchData={fetchData}/>
+            <TableComponent data={data} fetchData={fetchData} userRole={userRole}/>
             </Row>
             <CreateOrganizationModal
         show={showModal}
@@ -150,18 +157,13 @@ const handleSearch = (e) => {
           </div>
         )}
       <Col lg={12} className="d-flex justify-content-center">
-                <Row className="justify-content-center">
-                    <Pagination>
-                        {[...Array(totalPages).keys()].map((page) => (
-                            <Pagination.Item
-                                key={page + 1}
-                                active={currentPage === page + 1}
-                                onClick={() => handlePagination(page + 1)}
-                            >
-                                {page + 1}
-                            </Pagination.Item>
+          <Row className="justify-content-center">
+              <Pagination>
+                {[...Array(totalPages).keys()].map((page) => (
+                  <Pagination.Item key={page + 1} active={currentPage === page + 1} onClick={() => handlePagination(page + 1)}> {page + 1}
+                  </Pagination.Item>
                         ))}
-                    </Pagination>
+               </Pagination>
                 </Row>
                 </Col>
         </Container>

@@ -96,7 +96,8 @@ const allorganisation = (async (req, res) => {
 
             let allOrganisation = await organisationDetailModel.find().skip((page - 1) * pageSize).limit(pageSize);
 
-            res.status(200).json({ data: allOrganisation, currentPage: page, totalPages: Math.ceil(totalCount / pageSize), totalItems: totalCount, message: "All organisation retrieved!" });
+            res.status(200).json({ data: allOrganisation, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
+             totalItems: totalCount, message: "All organisation retrieved!" });
         } else {
             let searchData = await organisationDetailModel.find(
                         { org_name: { $regex: SearchString, $options: 'i' }},

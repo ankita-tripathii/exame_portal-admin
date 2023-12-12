@@ -11,14 +11,14 @@ const createassessment = (async (req, res) => {
                 title,
                 duration,
                 question_count,
-                organisation: { org_id, org_name }
+                organisation_id
             } = req.body;
 
             const newassessment = new assessmentDetailModel({
                 title,
                 duration,
                 question_count,
-                organisation: { org_id, org_name }
+                organisation_id
             });
 
             const dataToSave = await newassessment.save();
@@ -42,10 +42,10 @@ const updateassessment = (async (req, res) => {
                 title,
                 duration,
                 question_count,
-                organisation: { org_id, org_name }
+                organisation_id
             } = req.body;
 
-        const updatedassessment = await assessmentDetailModel.findOneAndUpdate({"_id":assessment_id, "organisation.org_id": org_id}, 
+        const updatedassessment = await assessmentDetailModel.findOneAndUpdate({"_id":assessment_id, "organisation.org_id": organisation_id}, 
         	{
                 $set: {
                     "title": title,

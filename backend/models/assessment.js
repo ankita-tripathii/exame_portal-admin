@@ -14,18 +14,11 @@ const assessmentSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    organisation: {
-        org_id: {
+    organisation_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'organisation',
             required: true
-        },
-        org_name: {
-            type: String,
-            ref: 'organisation',
-            required: true
-        }
-}
+    }
 },
 {
     timestamps: true

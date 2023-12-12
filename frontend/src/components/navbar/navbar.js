@@ -1,5 +1,5 @@
   import React from 'react';
-  import { useState } from 'react';
+  import { useState, useEffect } from 'react';
   import Offcanvas from 'react-bootstrap/Offcanvas';
   import { Navbar, Container, Nav, NavDropdown} from 'react-bootstrap';
   import Button from 'react-bootstrap/Button';
@@ -9,13 +9,32 @@
   import { PersonCircle} from 'react-bootstrap-icons';
   import { List} from 'react-bootstrap-icons';
   import styles from "./navbar.module.css";
+  import { jwtDecode} from 'jwt-decode'; 
+
 
 const DNavbar = () => {
+  const [userName, setUserName] = useState('');
+  const [userRole, setUserRole] = useState('');
+
 
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+
+useEffect(() => {
+    // Retrieve token from local storage
+    const authToken = localStorage.getItem('token');
+
+    // Decode the token to get user information
+    if (authToken) {
+     const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
+      setUserName(decodedToken.name);
+      setUserRole(decodedToken.role);
+    }
+  }, []);
+
 
   return (
 
@@ -25,7 +44,7 @@ const DNavbar = () => {
         <Col lg={1}>
           <Navbar.Brand href="/event">ExamZing</Navbar.Brand>
           </Col>
-          <Col lg={9}>
+          <Col lg={8}>
           <Button variant="link" onClick={handleShow}><List size={30} color="white"/></Button>
           </Col>
 
@@ -42,12 +61,15 @@ const DNavbar = () => {
              </Offcanvas.Body>
            </Offcanvas>
 
-          <Col lg={1}>
+          <Col lg={2}>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-          <PersonCircle size={30} color="white"/>
+           <div className="text-light ml-2">
+              <div>{userName}</div>
+              <div className="small">{userRole}</div>
+            </div>
             <Nav className="ml-auto">
-              <NavDropdown title="Ankita Tripathi" id="basic-nav-dropdown">
+              <NavDropdown id="basic-nav-dropdown">
               <NavDropdown.Item href="#">My Profile</NavDropdown.Item>
               <NavDropdown.Item href="#">Account Setting
               </NavDropdown.Item>

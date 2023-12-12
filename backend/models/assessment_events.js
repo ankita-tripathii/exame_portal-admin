@@ -9,7 +9,8 @@ const assessmenteventsSchema = new mongoose.Schema({
     slot: {
         startDate: {
             type: Date,
-            required: true
+            required: true,
+            timeZone: String
         },
         lateLoginDuration: {//minutes
             type: Number,
@@ -17,7 +18,8 @@ const assessmenteventsSchema = new mongoose.Schema({
         },
         endDate: {
             type: Date,
-            required: true
+            required: true,
+            timeZone: String
         }
     
 }
