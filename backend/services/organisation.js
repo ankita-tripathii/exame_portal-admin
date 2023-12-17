@@ -98,7 +98,8 @@ const allorganisation = (async (req, res) => {
 
             res.status(200).json({ data: allOrganisation, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
              totalItems: totalCount, message: "All organisation retrieved!" });
-        } else {
+        } 
+        else {
             let searchData = await organisationDetailModel.find(
                         { org_name: { $regex: SearchString, $options: 'i' }},
                         { org_name: 1, "location.state": 1, "location.pincode": 1, "contact.emailId": 1, "contact.contactNo": 1}
@@ -112,3 +113,17 @@ const allorganisation = (async (req, res) => {
 })
 
 exports.allorganisation = allorganisation;
+
+//-------------------------------------------------
+
+
+const allorg_name =( async (req, res) => {
+    try {
+        const org_name = await organisationDetailModel.find({}, 'org_name'); // Fetch only org_name
+        res.status(200).json({ data: org_name, message: "all org name retrieved"  });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching organization names" });
+    }
+});
+
+exports.allorg_name = allorg_name;

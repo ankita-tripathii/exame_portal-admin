@@ -3,6 +3,8 @@ const express = require('express');
 const assessmentDetailModel = require('../models/assessment');
 const adminApprovedMiddleware = require('../routes/accountvarify');
 
+const organisationDetailModel = require('../models/organisation');
+
 
 const createassessment = (async (req, res) => {
     try {
@@ -11,14 +13,20 @@ const createassessment = (async (req, res) => {
                 title,
                 duration,
                 question_count,
-                organisation_id
+                org_name
             } = req.body;
+
+            const existingorganization = await organisationDetailModel.findOne({org_name });
+
+            if (!existingorganization) {
+            return res.status(404).json({ message: 'Organization not found' });
+        }
 
             const newassessment = new assessmentDetailModel({
                 title,
                 duration,
                 question_count,
-                organisation_id
+                organisation_id: existingorganization._id
             });
 
             const dataToSave = await newassessment.save();
@@ -80,31 +88,45 @@ exports.updateassesment = updateassessment;
 
 const allassessment = (async (req, res) => {
     const SearchString = req.body.searchQuery;
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const pageSize = parseInt(req.query.pageSize) || 5; // Number of items per page
 
     try {
+
+         let query = {};
+
         if (SearchString === null || SearchString === undefined) {
-            const allAssessments = await assessmentDetailModel.find();
-            res.status(200).json({ data: allAssessments, message: "All assessments retrieved!" });
-        } else {
+
+            const totalCount = await assessmentDetailModel.countDocuments();
+
+            let allAssessments = await assessmentDetailModel.find().populate('organisation_id', 'org_name').skip((page - 1) * pageSize).limit(pageSize);
+            res.status(200).json({ data: allAssessments, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
+             totalItems: totalCount, message: "All assessments retrieved!" });
+        }
+         else {
+
+            const organisation_name = await organisationDetailModel.find(
+                { org_name: { $regex: SearchString, $options: 'i' } }
+                );
+
             let searchData = await assessmentDetailModel.find(
                 {
                     $or: [
                         { title: { $regex: SearchString, $options: 'i' } },
-                        { "organisation.org_name": { $regex: SearchString, $options: 'i' } }
+                        { organisation_id: { $in: organisation_name.map(org => org._id) } }
                     ]
                 },
-                { title: 1, "organisation.org_name": 1 }
-            );
+
+                { title: 1, duration: 1, question_count: 1, organisation_id: 1 }
+            ).populate('organisation_id', 'org_name');
 
             res.status(200).json({ data: searchData, message: "Title or org name searched!" });
         }
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(400).json({ message: "Sorry, could not search title or org name" });
     }
 })
 
 exports.allassessment = allassessment;
-
-
-
 
