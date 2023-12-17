@@ -46,20 +46,29 @@ const updateassessment = (async (req, res) => {
 
      try{
         await adminApprovedMiddleware(req, res, async () => {
+
+            const assessment_id = req.params.assessment_id;
+            
             const {
                 title,
                 duration,
                 question_count,
-                organisation_id
+                org_name 
             } = req.body;
 
-        const updatedassessment = await assessmentDetailModel.findOneAndUpdate({"_id":assessment_id, "organisation.org_id": organisation_id}, 
+            const existingOrganization = await organisationDetailModel.findOne({ org_name });
+
+             if (!existingOrganization) {
+                return res.status(404).json({ message: 'Organization not found' });
+            }
+
+        const updatedassessment = await assessmentDetailModel.findOneAndUpdate({"_id":assessment_id, "organisation_id": existingOrganization._id}, 
         	{
                 $set: {
                     "title": title,
                     "duration": duration,
                     "question_count": question_count,
-                    "organisation.org_name": org_name
+                    "organisation_id": existingOrganization._id
                 }
             },
             { new: true }

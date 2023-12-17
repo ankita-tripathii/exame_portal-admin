@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization }) => {
-    const [updatedOrganization, setUpdatedOrganization] = useState(null);
+const UpdateOrganisationModal = ({ show, handleClose, handleUpdate, organisation }) => {
+    const [updatedOrganisation, setUpdatedOrganisation] = useState(null);
 
     useEffect(() => {
-        setUpdatedOrganization(organization); // Set organization data on mount or update
-    }, [organization]);
+        setUpdatedOrganisation(organisation); // Set organization data on mount or update
+    }, [organisation]);
 
    const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -14,45 +14,45 @@ const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization
 
         if (subFieldName) {
             // If the field has a subfield (nested object), update it properly
-            setUpdatedOrganization({
-                ...updatedOrganization,
+            setUpdatedOrganisation({
+                ...updatedOrganisation,
                 [fieldName]: {
-                    ...updatedOrganization[fieldName],
+                    ...updatedOrganisation[fieldName],
                     [subFieldName]: value,
                 },
             });
         } else {
             // If it's a top-level field, update as before
-            setUpdatedOrganization({ ...updatedOrganization, [name]: value });
+            setUpdatedOrganisation({ ...updatedOrganisation, [name]: value });
         }
-        console.log(updatedOrganization);
+        console.log(updatedOrganisation);
     };
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        handleUpdate(updatedOrganization);
+        handleUpdate(updatedOrganisation);
         console.log(handleUpdate);
     };
 
-        if (!updatedOrganization) {
-        return null; // Return null or handle the case when organization data is not available
+        if (!updatedOrganisation) {
+        return null; // Return null or handle the case when organisation data is not available
     }
 
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title >Update Organization</Modal.Title>
+                <Modal.Title >Update Organisation</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="formOrgName">
-                        <Form.Label>Organization Name</Form.Label>
+                        <Form.Label>Organisation Name</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder="Enter organization name"
+                            placeholder="Enter organisation name"
                             name="org_name"
-                            value={updatedOrganization.org_name}
+                            value={updatedOrganisation.org_name}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
@@ -62,7 +62,7 @@ const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization
                             type="text"
                             placeholder="Enter state"
                             name="location.state"
-                            value={updatedOrganization.location.state || ''}
+                            value={updatedOrganisation.location.state || ''}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
@@ -72,7 +72,7 @@ const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization
                             type="text"
                             placeholder="Enter pincode"
                             name="location.pincode"
-                            value={updatedOrganization.location.pincode || ''}
+                            value={updatedOrganisation.location.pincode || ''}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
@@ -82,7 +82,7 @@ const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization
                             type="email"
                             placeholder="Enter email"
                             name="contact.emailId"
-                            value={updatedOrganization.contact.emailId || ''}
+                            value={updatedOrganisation.contact.emailId || ''}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
@@ -92,7 +92,7 @@ const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization
                             type="text"
                             placeholder="Enter contact number"
                             name="contact.contactNo"
-                            value={updatedOrganization.contact.contactNo || ''}
+                            value={updatedOrganisation.contact.contactNo || ''}
                             onChange={handleInputChange}
                         />
                     </Form.Group><br/>
@@ -105,4 +105,4 @@ const UpdateOrganizationModal = ({ show, handleClose, handleUpdate, organization
     );
 };
 
-export default UpdateOrganizationModal;
+export default UpdateOrganisationModal;

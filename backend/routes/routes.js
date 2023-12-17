@@ -41,7 +41,7 @@ router.post('/login', logIN);
 
 router.post('/allassessment', allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
-//router.put('/updatedassessment', adminApprovedMiddleware, updatedassessment);
+//router.put('/updatedassessment/:assessment_id', adminApprovedMiddleware, updatedassessment);
 
 
 

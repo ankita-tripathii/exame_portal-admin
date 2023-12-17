@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Container from "react-bootstrap/Container";
 import { PencilSquare } from 'react-bootstrap-icons';
 import styles from "./organisation.module.css";
-import UpdateOrganizationModal from './update_org_modal';
+import UpdateOrganisationModal from './update_org_modal';
 import { Alert } from "react-bootstrap";
 
 
@@ -24,7 +24,7 @@ const TableComponent = ({ data, fetchData, userRole }) => {
   const [showAlert, setShowAlert] = useState(false);
 
 
- const handleUpdateOrganization = async (updatedOrg) => {
+ const handleUpdateOrganisation = async (updatedOrg) => {
         try {
             // Perform the update API fetch here using updatedOrg data
             // Example fetch:
@@ -99,11 +99,11 @@ const TableComponent = ({ data, fetchData, userRole }) => {
             </tbody>
         </Table>
 
-              <UpdateOrganizationModal
+              <UpdateOrganisationModal
                 show={showModal}
                 handleClose={handleCloseModal}
-                handleUpdate={handleUpdateOrganization}
-                organization={selectedOrg}
+                handleUpdate={handleUpdateOrganisation}
+                organisation={selectedOrg}
                />
         </Row>
         {showAlert && (

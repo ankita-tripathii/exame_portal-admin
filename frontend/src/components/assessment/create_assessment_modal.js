@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from "./assessment.module.css";
+//import styles from "./assessment.module.css";
 import { Modal, Form, Button } from 'react-bootstrap';
 
 const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
@@ -11,11 +11,15 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
   });
 
   const [orgList, setOrgList] = useState([]); // To store the list of organization names
+ 
 
-  // Fetch organization names on component mount
+ // Fetch organization names when dropdown is clicked
   useEffect(() => {
-    fetchOrganizations();
-  }, []);
+    if (orgList) {
+      fetchOrganizations();
+    }
+  }, [orgList]);
+
 
   const fetchOrganizations = async () => {
     try {
@@ -47,6 +51,8 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
     setAssessmentData({ ...assessmentData, [name]: value });
   };
 
+   
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     handleSubmit(assessmentData); // Passing assessment data to handleCreate
@@ -63,6 +69,7 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>Title</Form.Label>
             <Form.Control
               type="text"
+              placeholder="Enter Title name"
               name="title"
               value={assessmentData.title}
               onChange={handleInputChange}
@@ -73,6 +80,7 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>Duration</Form.Label>
             <Form.Control
               type="text"
+              placeholder="Enter duration in minutes"
               name="duration"
               value={assessmentData.duration}
               onChange={handleInputChange}
@@ -83,13 +91,14 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
             <Form.Label>Question Count</Form.Label>
             <Form.Control
               type="text"
+              placeholder="Enter question count"
               name="question_count"
               value={assessmentData.question_count}
               onChange={handleInputChange}
               required
             />
             </Form.Group>
-          <Form.Group controlId="orgName">
+          <Form.Group controlId="org_name">
             <Form.Label></Form.Label>
             <Form.Select
               name="org_name"
@@ -98,7 +107,6 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
               onChange={handleInputChange}
               required
             >  
-              <option value="">Select Organization</option>
               {orgList.map((org) => (
                 <option key={org._id} value={org.org_name}>
                   {org.org_name}

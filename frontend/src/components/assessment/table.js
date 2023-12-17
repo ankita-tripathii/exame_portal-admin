@@ -10,61 +10,61 @@ import { Alert } from "react-bootstrap";
 
 const TableComponent = ({ data, fetchData}) => {
 
-    // const [showModal, setShowModal] = useState(false);
-    // const [selectedOrg, setSelectedOrg] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedAssessment, setSelectedAssessment] = useState(null);
 
-    // const handleCloseModal = () => setShowModal(false);
-    // const handleShowModal = (data) => {
-    //     setSelectedOrg(data);
-    //     setShowModal(true);
-    // };
+    const handleCloseModal = () => setShowModal(false);
+    const handleShowModal = (data) => {
+        setSelectedAssessment(data);
+        setShowModal(true);
+    };
 
-  // const [alertVariant, setAlertVariant] = useState('');
-  // const [alertMessage, setAlertMessage] = useState('');
-  // const [showAlert, setShowAlert] = useState(false);
+  const [alertVariant, setAlertVariant] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
 
- // const handleUpdateAssessment = async (updatedOrg) => {
- //        try {
- //            // Perform the update API fetch here using updatedOrg data
- //            // Example fetch:
- //            const authToken = localStorage.getItem('token');
- //            const response = await fetch(`http://localhost:5000/api/updateorganisation/${updatedOrg._id}`, {
- //                method: 'PUT',
- //                headers: {
- //                    'Content-Type': 'application/json',
- //                    'auth-token': authToken 
- //                },
- //                body: JSON.stringify(updatedOrg),
- //            });
+ const handleUpdateAssessment = async (updatedAssessment) => {
+        try {
+            // Perform the update API fetch here using updatedAssessment data
+            // Example fetch:
+            const authToken = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:5000/api/updateorganisation/${updatedAssessment._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': authToken 
+                },
+                body: JSON.stringify(updatedAssessment),
+            });
              
- //             const result = await response.json();
- //            // Handle response based on your requirements
- //            if (response.ok) {
- //                setAlertVariant('success');
- //                setAlertMessage(result.message);
- //                setShowAlert(true);
- //                setTimeout(() => setShowAlert(false), 3000); // Close success alert after 1 seconds
- //                fetchData();
- //                handleCloseModal();
+             const result = await response.json();
+            // Handle response based on your requirements
+            if (response.ok) {
+                setAlertVariant('success');
+                setAlertMessage(result.message);
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 3000); // Close success alert after 1 seconds
+                fetchData();
+                handleCloseModal();
                
- //            } else {
- //                setAlertVariant('danger');
- //                setAlertMessage(result.message);
- //                setShowAlert(true);
- //                setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
- //                console.error('Failed to update organization');
+            } else {
+                setAlertVariant('danger');
+                setAlertMessage(result.message);
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
+                console.error('Failed to update organization');
                 
- //            }
- //        } catch (error) {
- //            setAlertVariant('danger');
- //            setAlertMessage(error.message);
- //            setShowAlert(true);  
- //            setTimeout(() => setShowAlert(false), 9000); // Close success alert after 1 seconds
- //            console.error(error.message);
+            }
+        } catch (error) {
+            setAlertVariant('danger');
+            setAlertMessage(error.message);
+            setShowAlert(true);  
+            setTimeout(() => setShowAlert(false), 9000); // Close success alert after 1 seconds
+            console.error(error.message);
             
- //        }
- //    };
+        }
+    };
    
     return (
         <>
@@ -87,11 +87,18 @@ const TableComponent = ({ data, fetchData}) => {
                                <td>{assessment?.duration || 'N/A'}</td>
                                 <td>{assessment?.question_count || 'N/A'}</td>
                                 <td>{assessment?.organisation_id?.org_name || 'N/A'}</td>
-                                <td><PencilSquare /></td>
+                                <td><PencilSquare onClick={() => handleShowModal(assessment)} /></td>
                     </tr>
                 ))}
             </tbody>
         </Table>
+
+        <UpdateAssessmentModal
+                show={showModal}
+                handleClose={handleCloseModal}
+                handleUpdate={handleUpdateAssessment}
+                assessment={selectedAssessment}
+               />
 
               
         </Row>

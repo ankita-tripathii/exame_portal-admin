@@ -1,101 +1,115 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, organization }) => {
-    const [updatedOrganization, setUpdatedOrganization] = useState(null);
+const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) => {
+    const [updatedAssessment, setUpdatedAssessment] = useState(null);
+
+    const [orgList, setOrgList] = useState([]); // State to hold the list of organizations
 
     useEffect(() => {
-        setUpdatedOrganization(organization); // Set organization data on mount or update
-    }, [organization]);
+        setUpdatedAssessment(assessment); // Set assessment data on mount or update
 
-   const handleInputChange = (e) => {
+         // Fetch organization names
+        fetchOrgNames();
+
+    }, [assessment]);
+
+
+    const fetchOrgNames = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/allorg_name");
+
+        if (!response.ok) {
+        throw new Error('Failed to fetch organizations');
+      }
+
+      const result = await response.json();
+      console.log('Fetched Data:', result);
+      // Check if the result is an array before setting orgList
+      if (Array.isArray(result)) {
+        setOrgList(result); // Update the organization names list
+      } else {
+        console.error('Fetched data is not an array:', result);
+      }
+      
+    } 
+    catch (error) {
+      console.error('Error fetching organizations:', error);
+    }
+  };
+
+    const handleInputChange = (e) => {
         const { name, value } = e.target;
-        const [fieldName, subFieldName] = name.split('.');
 
-        if (subFieldName) {
-            // If the field has a subfield (nested object), update it properly
-            setUpdatedOrganization({
-                ...updatedOrganization,
-                [fieldName]: {
-                    ...updatedOrganization[fieldName],
-                    [subFieldName]: value,
-                },
-            });
-        } else {
-            // If it's a top-level field, update as before
-            setUpdatedOrganization({ ...updatedOrganization, [name]: value });
-        }
-        console.log(updatedOrganization);
+        setUpdatedAssessment({
+            ...updatedAssessment,
+            [name]: value,
+        });
     };
-
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        handleUpdate(updatedOrganization);
-        console.log(handleUpdate);
+        handleUpdate(updatedAssessment);
     };
 
-        if (!updatedOrganization) {
-        return null; // Return null or handle the case when organization data is not available
+    if (!updatedAssessment) {
+        return null; // Return null or handle the case when assessment data is not available
     }
 
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title >Update Organization</Modal.Title>
+                <Modal.Title >Update Assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="formOrgName">
-                        <Form.Label>Organization Name</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter organization name"
-                            name="org_name"
-                            value={updatedOrganization.org_name}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="formState">
-                        <Form.Label>State</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter state"
-                            name="location.state"
-                            value={updatedOrganization.location.state || ''}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
-                   <Form.Group controlId="formPincode">
-                        <Form.Label>Pincode</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter pincode"
-                            name="location.pincode"
-                            value={updatedOrganization.location.pincode || ''}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="formEmail">
-                        <Form.Label>Email ID</Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="Enter email"
-                            name="contact.emailId"
-                            value={updatedOrganization.contact.emailId || ''}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="formContactNo">
-                        <Form.Label>Contact Number</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter contact number"
-                            name="contact.contactNo"
-                            value={updatedOrganization.contact.contactNo || ''}
-                            onChange={handleInputChange}
-                        />
-                    </Form.Group><br/>
+                    <Form.Group controlId="title">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              name="title"
+              value={updatedAssessment.title}
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+                    <Form.Group controlId="duration">
+            <Form.Label>Duration</Form.Label>
+            <Form.Control
+              type="text"
+              name="duration"
+              value={updatedAssessment.duration}
+              onChange={handleInputChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="question_count">
+            <Form.Label>Question Count</Form.Label>
+            <Form.Control
+              type="text"
+              name="question_count"
+              value={updatedAssessment.question_count}
+              onChange={handleInputChange}
+              required
+            />
+            </Form.Group>
+          <Form.Group controlId="orgName">
+            <Form.Label></Form.Label>
+            <Form.Select
+              name="org_name"
+              placeholder="select orgaisation name"
+              value={updatedAssessment.org_name}
+              onChange={handleInputChange}
+              required
+            >  
+              <option value="">Select Organization</option>
+              {orgList.map((org) => (
+                <option key={org._id} value={org.org_name}>
+                  {org.org_name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group><br/>
                     <div className="d-flex justify-content-center">
                     <Button variant="primary" type="submit">Update</Button>
                     </div>

@@ -60,8 +60,8 @@ const handleSearch = (e) => {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
 
-   const [userRole, setUserRole] = useState('');
-   const [userApproved, setUserApproved] = useState('');
+   // const [userRole, setUserRole] = useState('');
+   // const [userApproved, setUserApproved] = useState('');
 
 
   const handleCreate = async (assessmentData) => {
@@ -71,8 +71,8 @@ const handleSearch = (e) => {
     const authToken = localStorage.getItem('token');
    if (authToken) {
      const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
-      setUserRole(decodedToken.role);
-      setUserApproved(decodedToken.isApproved);
+      // setUserRole(decodedToken.role);
+      // setUserApproved(decodedToken.isApproved);
     }
   
 
