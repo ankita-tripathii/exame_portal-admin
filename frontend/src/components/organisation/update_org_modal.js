@@ -32,7 +32,7 @@ const UpdateOrganisationModal = ({ show, handleClose, handleUpdate, organisation
     const handleSubmit = (e) => {
         e.preventDefault();
         handleUpdate(updatedOrganisation);
-        console.log(handleUpdate);
+        
     };
 
         if (!updatedOrganisation) {

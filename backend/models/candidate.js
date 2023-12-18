@@ -12,18 +12,11 @@ const candidateSchema = new mongoose.Schema({
         minlength: 6,
         maxlength: 100
     },
-    organisation: {
-        org_id: {
+    organisation_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'organisation',
             required: true
-        },
-        org_name: {
-            type: String,
-            ref: 'organisation',
-            required: true
-        }
-   }
+    }
    },
    {
     timestamps: true

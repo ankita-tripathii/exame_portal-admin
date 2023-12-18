@@ -1,21 +1,8 @@
 const express = require('express');
 const adminApprovedMiddleware = require('../routes/accountvarify');
 const candidateDetailModel = require('../models/candidate');
+const organisationDetailModel = require('../models/organisation');
 
-
-const allcandidate = ( async (req, res) => {
-    try{
-        const data= await candidateDetailModel.find();
-       res.status(200).json(data)
-    }
-    catch(error){
-        res.status(500).json({message: error.message})
-    }
-})
-
-exports.allcandidate = allcandidate;
-
-//------------------------------------------------------------------------------
 
 
 const createcandidate = (async (req, res) => {
@@ -25,13 +12,19 @@ const createcandidate = (async (req, res) => {
             const {
         user_name,
         user_email,
-        organisation: {org_id, org_name}
+        org_name
          } = req.body;
+
+         const existingorganization = await organisationDetailModel.findOne({org_name });
+
+            if (!existingorganization) {
+            return res.status(404).json({ message: 'Organization not found' });
+        }
 
      const newcandidate = new candidateDetailModel({
         user_name,
         user_email,
-        organisation: {org_id, org_name}
+        organisation_id: existingorganization._id
          })
 
         const dataToSave = await newcandidate.save(); // mongo save
@@ -52,18 +45,27 @@ const updatecandidate = (async (req, res) => {
 
      try{
         await adminApprovedMiddleware(req, res, async () => {
+
+            const candidate_id = req.params.candidate_id;
+
             const {
-        candidate_id,
         user_name,
         user_email,
-        organisation: {org_id, org_name}
+         org_name 
          } = req.body;
-            const updatedcandidate = await candidateDetailModel.findOneAndUpdate({"_id":candidate_id, "organisation.org_id": org_id}, 
+
+          const existingOrganization = await organisationDetailModel.findOne({ org_name });
+
+             if (!existingOrganization) {
+                return res.status(404).json({ message: 'Organization not found' });
+            }
+
+            const updatedcandidate = await candidateDetailModel.findOneAndUpdate({"_id":candidate_id}, 
             {
                 $set: {
                     "user_name": user_name,
                     "user_email": user_email,
-                    "organisation.org_name": org_name
+                    "organisation_id": existingOrganization._id
                       }
             },
             { new: true }
@@ -86,22 +88,46 @@ exports.updatecandidate = updatecandidate;
 
 //----------------------------------------------------------------------------------------------------
 
+const allcandidate = (async (req, res) => {
+    const SearchString = req.body.searchQuery;
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const pageSize = parseInt(req.query.pageSize) || 5; // Number of items per page
 
-const searchcandidate = ( async (req, res) => {
-     const candidateSearchString = req.body.searchQuery;
+    try {
 
-     try{
-        let searchData = await candidateDetailModel.find(
-                { user_name: {$regex: candidateSearchString, $options: 'i'}},
-                { user_name: 1, "organisation.org_name": 1}
-            );
+         let query = {};
 
-        res.status(200).json({ data: searchData , message: "candidate name searched!"});
-    }
-    catch(error){
-        res.status(400).json({message: "Sorry could not searched candidate name" });
-        
+        if (SearchString === null || SearchString === undefined) {
+
+            const totalCount = await candidateDetailModel.countDocuments();
+
+            let allCandidates = await candidateDetailModel.find().populate('organisation_id', 'org_name').skip((page - 1) * pageSize).limit(pageSize);
+            res.status(200).json({ data: allCandidates, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
+             totalItems: totalCount, message: "All candidates retrieved!" });
+        }
+         else {
+
+            const organisation_name = await organisationDetailModel.find(
+                { org_name: { $regex: SearchString, $options: 'i' } }
+                );
+
+            let searchData = await candidateDetailModel.find(
+                {
+                    $or: [
+                        { user_name: {$regex: SearchString, $options: 'i'} },
+                        { organisation_id: { $in: organisation_name.map(org => org._id) } }
+                    ]
+                },
+
+                { user_name: 1, user_email: 1, organisation_id: 1 }
+            ).populate('organisation_id', 'org_name');
+
+            res.status(200).json({ data: searchData, message: "user name  or org name searched!" });
+        }
+    } 
+    catch (error) {
+        res.status(400).json({ message: "Sorry, could not search user name or org name" });
     }
 })
 
-exports.searchcandidate = searchcandidate;
+exports.allcandidate = allcandidate;

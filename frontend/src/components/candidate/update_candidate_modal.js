@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) => {
-    const [updatedAssessment, setUpdatedAssessment] = useState(null);
+const UpdateCandidateModal = ({ show, handleClose, handleUpdate, candidate }) => {
+    const [updatedCandidate, setUpdatedCandidate] = useState(null);
 
     const [orgList, setOrgList] = useState([]); // State to hold the list of organizations
 
     useEffect(() => {
-        setUpdatedAssessment(assessment); // Set assessment data on mount or update
+        setUpdatedCandidate(candidate); // Set candidate data on mount or update
 
          // Fetch organization names
         fetchOrgNames();
 
-    }, [assessment]);
+    }, [candidate]);
 
 
     const fetchOrgNames = async () => {
@@ -41,64 +41,53 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        setUpdatedAssessment({
-            ...updatedAssessment,
+        setUpdatedCandidate({
+            ...updatedCandidate,
             [name]: value,
         });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        handleUpdate(updatedAssessment);
+        handleUpdate(updatedCandidate);
     };
 
-    if (!updatedAssessment) {
-        return null; // Return null or handle the case when assessment data is not available
+    if (!updatedCandidate) {
+        return null; // Return null or handle the case when candidate data is not available
     }
 
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title >Update Assessment</Modal.Title>
+                <Modal.Title >Update Candidate</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="title">
-            <Form.Label>Title</Form.Label>
+                    <Form.Group controlId="user_name">
+            <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              name="title"
-              value={updatedAssessment.title}
+              name="user_name"
+              value={updatedCandidate.user_name}
               onChange={handleInputChange}
               required
             />
           </Form.Group>
-                    <Form.Group controlId="duration">
+                    <Form.Group controlId="user_email">
             <Form.Label>Duration</Form.Label>
             <Form.Control
               type="text"
-              name="duration"
-              value={updatedAssessment.duration}
+              name="user_email"
+              value={updatedCandidate.user_email}
               onChange={handleInputChange}
               required
             />
           </Form.Group>
-          <Form.Group controlId="question_count">
-            <Form.Label>Question Count</Form.Label>
-            <Form.Control
-              type="text"
-              name="question_count"
-              value={updatedAssessment.question_count}
-              onChange={handleInputChange}
-              required
-            />
-            </Form.Group>
           <Form.Group controlId="orgName">
-            <Form.Label></Form.Label>
+            <Form.Label>select orgaisation name</Form.Label>
             <Form.Select
               name="org_name"
-              placeholder="select orgaisation name"
-              value={updatedAssessment.org_name}
+              value={updatedCandidate.org_name}
               onChange={handleInputChange}
               required
             >  
@@ -118,4 +107,4 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
     );
 };
 
-export default UpdateAssessmentModal;
+export default UpdateCandidateModal;
