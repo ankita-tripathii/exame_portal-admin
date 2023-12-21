@@ -1,19 +1,22 @@
 import React, { useState }  from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Alert } from "react-bootstrap";
+import { Alert, Spinner } from "react-bootstrap";
 
 
 export default function Login (){
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-   const [alertVariant, setAlertVariant] = useState(""); // Variant for different alert styles
+  const [alertVariant, setAlertVariant] = useState(""); // Variant for different alert styles
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showBackdrop, setShowBackdrop] = useState(false); // State for faded background
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+   
 
     const requestOptions = {
       method: "POST",
@@ -33,29 +36,41 @@ export default function Login (){
 
       if (response.ok) {
         localStorage.setItem("token", data.token); // Store token in localStorage
-        setAlertVariant("success");
-        setAlertMessage("Login Successful!");
-        setShowAlert(true);
-         
-        // Redirect to another page after successful login
-        setTimeout(() => {
-          navigate('/event');
-        }, 2000); // Redirect after 2 seconds
-    
 
-      } else {
+         setLoading(true);
+         setShowBackdrop(true); // Show the faded background
+
+        setTimeout(() => {
+          setShowBackdrop(false);
+          setLoading(false); // Hide the spinner after navigation
+          navigate('/event');
+          
+        }, 3000);
+
+          setAlertVariant("success");
+          setAlertMessage("Login Successful!");
+          setTimeout(() => {
+            setShowAlert(true); // show the success alert after 1 seconds
+          }, 1000);
+
+          setTimeout(() => {
+            setShowAlert(false); // Hide the success alert after 3 seconds
+          }, 3000);
+      }
+       else {
+        setLoading(false);
         setAlertVariant("danger");
         setAlertMessage(data.message);
         setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
+        setTimeout(() => setShowAlert(false), 2000); // Close success alert after 1 seconds
       }
     } catch (error) {
       setAlertVariant("danger");
       setAlertMessage("An error occurred");
       setShowAlert(true);
       console.error("Error:", error);
-      setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
-
+      setTimeout(() => setShowAlert(false), 2000); // Close success alert after 1 seconds
+      setLoading(false);
     }
   };
 
@@ -63,6 +78,35 @@ export default function Login (){
 
   return (
     <>
+
+      {showBackdrop && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust opacity here
+            zIndex: 9998,
+          }}
+        ></div>
+      )}
+
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 9999,
+          }}
+        >
+          <Spinner animation="border" variant="dark" role="status" />
+        </div>
+      )}
+
       <div className="container my-3 py-3">
         <h1 style={{color: "#7071E8"}}className="text-center">Login</h1>
         <hr />

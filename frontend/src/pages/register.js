@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert } from "react-bootstrap";
+import { Alert, Spinner } from "react-bootstrap";
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -14,6 +14,8 @@ export default function Register() {
    const [alertVariant, setAlertVariant] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showBackdrop, setShowBackdrop] = useState(false); // State for faded background
   const navigate = useNavigate();
 
     const handleInputChange = (e) => {
@@ -45,20 +47,36 @@ export default function Register() {
             const result = await response.json();
 
             if (response.ok) {
+                setLoading(true);
+                setShowBackdrop(true); // Show the faded background
+                
+                 setTimeout(() => {
+                 setShowBackdrop(false);
+                 setLoading(false); // Hide the spinner after navigation
+                 navigate('/event');
+          
+                  }, 3000);
+
                 setAlertVariant('success');
                 setAlertMessage('User signup successful!');
-                setShowAlert(true);
-                
                 setTimeout(() => {
-                   navigate('/event');
-                     }, 2000); // Redirect after 2 seconds
+                    setShowAlert(true); // show the success alert after 1 seconds
+                }, 1000);
+
+                setTimeout(() => {
+                setShowAlert(false); // Hide the success alert after 3 seconds
+               }, 3000);
+
             } else {
+                setLoading(false);
                 setAlertVariant('danger');
                 setAlertMessage(result.message || 'An error occurred');
                 setShowAlert(true);
                 setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
                  }
-        } catch (error) {
+        } 
+        catch (error) {
+            setLoading(false);
             setAlertVariant('danger');
             setAlertMessage('An error occurred');
             setShowAlert(true);  
@@ -71,6 +89,34 @@ export default function Register() {
 
     return (
         <>
+
+            {showBackdrop && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust opacity here
+            zIndex: 9998,
+          }}
+        ></div>
+      )}
+
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 9999,
+          }}
+        >
+          <Spinner animation="border" variant="dark" role="status" />
+        </div>
+      )}
             <div className="container my-3 py-3">
                 <h1 style={{color: "#7071E8"}} className="text-center">Register</h1>
                 <hr />

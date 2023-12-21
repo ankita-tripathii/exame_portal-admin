@@ -247,8 +247,13 @@ const allevent = async (req, res) => {
                     organisation: { $arrayElemAt: ['$organisation', 0] }
                 }
             },
+            {
+             $sort: { createdAt: -1 } // Sort by createdAt in descending order
+            },
             { $skip: (page - 1) * limit },
             { $limit: limit }
+
+            
         ];
 
         const data = await assessmenteventDetailModel.aggregate(pipeline);

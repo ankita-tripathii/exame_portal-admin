@@ -94,7 +94,7 @@ const allorganisation = (async (req, res) => {
 
             const totalCount = await organisationDetailModel.countDocuments();
 
-            let allOrganisation = await organisationDetailModel.find().skip((page - 1) * pageSize).limit(pageSize);
+            let allOrganisation = await organisationDetailModel.find().sort({ createdAt: -1 }).skip((page - 1) * pageSize).limit(pageSize);
 
             res.status(200).json({ data: allOrganisation, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
              totalItems: totalCount, message: "All organisation retrieved!" });

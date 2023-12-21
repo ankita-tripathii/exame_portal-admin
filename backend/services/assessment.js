@@ -105,7 +105,7 @@ const allassessment = (async (req, res) => {
 
             const totalCount = await assessmentDetailModel.countDocuments();
 
-            let allAssessments = await assessmentDetailModel.find().populate('organisation_id', 'org_name').skip((page - 1) * pageSize).limit(pageSize);
+            let allAssessments = await assessmentDetailModel.find().populate('organisation_id', 'org_name').sort({ createdAt: -1 }).skip((page - 1) * pageSize).limit(pageSize);
             res.status(200).json({ data: allAssessments, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
              totalItems: totalCount, message: "All assessments retrieved!" });
         }

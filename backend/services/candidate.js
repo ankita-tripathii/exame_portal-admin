@@ -101,7 +101,7 @@ const allcandidate = (async (req, res) => {
 
             const totalCount = await candidateDetailModel.countDocuments();
 
-            let allCandidates = await candidateDetailModel.find().populate('organisation_id', 'org_name').skip((page - 1) * pageSize).limit(pageSize);
+            let allCandidates = await candidateDetailModel.find().populate('organisation_id', 'org_name').sort({ createdAt: -1 }).skip((page - 1) * pageSize).limit(pageSize);
             res.status(200).json({ data: allCandidates, currentPage: page, totalPages: Math.ceil(totalCount / pageSize),
              totalItems: totalCount, message: "All candidates retrieved!" });
         }
