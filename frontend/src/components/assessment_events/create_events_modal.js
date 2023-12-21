@@ -1,24 +1,37 @@
 import React, { useState, useEffect } from 'react';
 //import styles from "./assessment.module.css";
 import { Modal, Form, Button } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import { BsCalendar } from 'react-icons/bs';
+const moment = require('moment-timezone');
+
+
+
 
 const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
+
   const [assessmenteventData, setassessmenteventData] = useState({
     title: '',
     slot: {
-      startDate: '',
+      startDate: new Date(), // Initial date value
       lateLoginDuration: '', 
-      endDate: '',
-    }
+      endDate: new Date(), // Initial date value
+      timeZone: '', // Initialize timeZone with the selected value
+    },
+    org_name:'',
   });
 
   const [titleList, settitleList] = useState([]); // To store the list of organization names
- 
+  const [orgNames, setOrgNames] = useState([]);
 
  // Fetch organization names when dropdown is clicked
   useEffect(() => {
     
       fetchassessment_title();
+      fetchOrganisationNames();
     
   },[]);
 
@@ -49,6 +62,24 @@ const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
   };
 
 
+const fetchOrganisationNames = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/allorg_name');
+      if (!response.ok) {
+        throw new Error('Failed to fetch organization names');
+      }
+
+      const result = await response.json();
+      if (Array.isArray(result.data)) {
+        setOrgNames(result.data);
+      } else {
+        console.error('Fetched data is not an array:', result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching organization names:', error);
+    }
+  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,13 +100,48 @@ const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
   }
 };
 
+const handleDateChange = (date, name) => {
+    setassessmenteventData({
+      ...assessmenteventData,
+      slot: {
+        ...assessmenteventData.slot,
+        [name]: date,
+      },
+    });
+  };
 
+  const handleTimeChange = (time) => {
+    setassessmenteventData({
+      ...assessmenteventData,
+      slot: {
+        ...assessmenteventData.slot,
+        startDate: time,
+      },
+    });
+  };
 
-   
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    handleSubmit(assessmenteventData); // Passing assessment data to handleCreate
+
+const { startDate, endDate, timeZone } = assessmenteventData.slot;
+
+  // Convert the startDate and endDate to the selected time zone
+  const convertedStartDate = moment.utc(startDate).tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
+  const convertedEndDate = moment.utc(endDate).tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
+
+   // Update the startDate and endDate in the assessmenteventData state
+  const updatedEventData = {
+    ...assessmenteventData,
+    slot: {
+      ...assessmenteventData.slot,
+      startDate: convertedStartDate,
+      endDate: convertedEndDate,
+      // Include other fields if needed
+    },
+  };
+
+    handleSubmit(updatedEventData); // Passing event data to handleCreate
   };
 
   return (
@@ -103,18 +169,19 @@ const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
           </Form.Group>
           <Form.Group controlId="startDate">
             <Form.Label>Start Date</Form.Label>
-            <Form.Control
-              type="text"
-              name="slot.startDate"
-              value={assessmenteventData.slot.startDate}
-              onChange={handleInputChange}
-              required
+            <DatePicker
+              selected={assessmenteventData.slot.startDate}
+              onChange={(date) => handleDateChange(date, 'startDate')}
+              showTimeSelect
+              timeFormat="HH:mm"
+              dateFormat="MMMM d, yyyy h:mm aa"
             />
           </Form.Group>
           <Form.Group controlId="lateLoginDuration">
             <Form.Label>Late Login Duration</Form.Label>
             <Form.Control
               type="text"
+              placeholder="add time in a minutes"
               name="slot.lateLoginDuration"
               value={assessmenteventData.slot.lateLoginDuration}
               onChange={handleInputChange}
@@ -123,13 +190,42 @@ const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
           </Form.Group>
           <Form.Group controlId="endDate">
             <Form.Label>End Date</Form.Label>
+            <DatePicker
+              selected={assessmenteventData.slot.endDate}
+              onChange={(date) => handleDateChange(date, 'endDate')}
+              showTimeSelect
+              timeFormat="HH:mm"
+              dateFormat="MMMM d, yyyy h:mm aa"
+            />
+          </Form.Group>
+          <Form.Group controlId="timeZone">
+            <Form.Label>Timezone</Form.Label>
             <Form.Control
-              type="text"
-              name="slot.endDate"
-              value={assessmenteventData.slot.endDate}
+              as="select"
+              name="slot.timeZone"
+              value={assessmenteventData.slot.timeZone}
+              onChange={handleInputChange}
+            >
+              <option value="Asia/Kolkata">India</option>
+              <option value="America/New_York">US</option>
+              <option value="Asia/Dhaka">Bangladesh</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="org_name">
+            <Form.Label>select organisation name</Form.Label>
+            <Form.Select
+              name="org_name"
+              placeholder="select organisation name"
+              value={assessmenteventData.org_name}
               onChange={handleInputChange}
               required
-            />
+            >  
+              {orgNames.map((org) => (
+                <option key={org._id} value={org.org_name}>
+                  {org.org_name}
+                </option>
+              ))}
+            </Form.Select>
           </Form.Group><br/>
           <div className="d-flex justify-content-center">
           <Button variant="primary" type="submit">

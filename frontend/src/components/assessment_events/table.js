@@ -77,6 +77,7 @@ const TableComponent = ({ data, fetchData}) => {
                     <th>start Date</th>
                     <th>lateLogin Duration</th>
                     <th>End Date</th>
+                    <th>Organisation Name</th>
                     <th>Edit</th>
                 </tr>
             </thead>
@@ -87,6 +88,7 @@ const TableComponent = ({ data, fetchData}) => {
                                 <td>{events.slot?.startDate || 'N/A'}</td>
                                 <td>{events.slot?.lateLoginDuration || 'N/A'}</td>
                                 <td>{events.slot?.endDate || 'N/A'}</td>
+                                <td>{events?.organisation?.org_name || 'N/A'}</td>
                                 <td><PencilSquare onClick={() => handleShowModal(events)} /></td>
                     </tr>
                 ))}

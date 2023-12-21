@@ -5,6 +5,7 @@ const adminApprovedMiddleware = require('../routes/accountvarify');
 const assessmenteventDetailModel = require('../models/assessment_events');
 const eventCandidateModel = require('../models/event_candidate');
 const assessmentDetailModel = require('../models/assessment');
+const organisationDetailModel = require('../models/organisation');
 
 
 // const allevent = ( async (req, res) => {
@@ -84,7 +85,8 @@ const createassessmentevent = (async (req, res) => {
         await adminApprovedMiddleware(req, res, async () => {
         const {
         title,
-        slot: {startDate, lateLoginDuration, endDate}
+        slot: {startDate, lateLoginDuration, endDate, timeZone},
+        org_name
          } = req.body;
 
           const existingassessment = await assessmentDetailModel.findOne({ title });
@@ -93,9 +95,27 @@ const createassessmentevent = (async (req, res) => {
             return res.status(404).json({ message: 'title not found' });
         }
 
+        const existingOrganization = await organisationDetailModel.findOne({ org_name });
+
+            if (!existingOrganization) {
+                return res.status(404).json({ message: 'Organization not found' });
+            }
+
+        // Adjusting the startDate and endDate according to the provided timeZone
+            const adjustedStartDate = new Date(startDate).toLocaleString('en-US', { timeZone });
+            const adjustedEndDate = new Date(endDate).toLocaleString('en-US', { timeZone });
+
      const newevent = new assessmenteventDetailModel({
         assessment_id: existingassessment._id,
-        slot: {startDate, lateLoginDuration, endDate}
+        slot: {startDate: adjustedStartDate, 
+               lateLoginDuration, 
+               endDate: adjustedEndDate,
+               timeZone
+           },
+        organisation: {
+               org_id: existingOrganization._id,
+               org_name: existingOrganization.org_name // Include org_name in the event
+                }
         })
 
         const dataToSave = await newevent.save(); // mongo save
@@ -176,7 +196,7 @@ const allevent = async (req, res) => {
             matchStage['slot.startDate'] = new Date(exam_start_date);
         }
         if (organisation_name !== null) {
-            matchStage['event_assessment.organisation.org_name'] = organisation_name;
+            matchStage['organisation.org_name'] = organisation_name;
             
         }
 
@@ -207,6 +227,14 @@ const allevent = async (req, res) => {
                     as: 'event_assessment'
                 }
             },
+            {
+              $lookup: {
+                from: 'organisations', // Update this to the correct name of your organisation collection
+                localField: 'event_assessment.organisation_id', // Assuming 'organisation_id' is the field in 'assessments' referencing organisations
+                foreignField: '_id',
+                as: 'organisation'
+              }
+            },
             { $unwind: '$event_assessment' },
             ...searchPipeline,
             {
@@ -215,13 +243,13 @@ const allevent = async (req, res) => {
                     slot: 1,
                     createdAt: 1,
                     assessment_id: 1,
-                    event_assessment: 1
+                    event_assessment: 1,
+                    organisation: { $arrayElemAt: ['$organisation', 0] }
                 }
             },
             { $skip: (page - 1) * limit },
             { $limit: limit }
         ];
-console.log('Pipeline:', pipeline);
 
         const data = await assessmenteventDetailModel.aggregate(pipeline);
         const totalCount = await assessmenteventDetailModel.countDocuments(matchStage);
