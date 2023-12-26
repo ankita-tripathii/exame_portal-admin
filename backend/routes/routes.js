@@ -26,7 +26,6 @@ const {updatecandidate} = require('../services/candidate');
 const {allorganisation} = require('../services/organisation');
 const {createorganisation} = require('../services/organisation');
 const {updateorganisation} = require('../services/organisation');
-const {allorg_name} = require('../services/organisation');
 
 
 const {createeventcandidate} = require('../services/event_candidate');
@@ -59,7 +58,6 @@ router.put('/updatecandidate/:candidate_id', adminApprovedMiddleware, updatecand
 router.post('/allorganisation', allorganisation);
 router.post('/createorganisation', adminApprovedMiddleware, createorganisation);
 router.put('/updateorganisation/:org_id', adminApprovedMiddleware, updateorganisation);
-router.get('/allorg_name', allorg_name);
 
 
 router.post('/createeventcandidate', adminApprovedMiddleware, createeventcandidate);

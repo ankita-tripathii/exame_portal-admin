@@ -117,13 +117,3 @@ exports.allorganisation = allorganisation;
 //-------------------------------------------------
 
 
-const allorg_name =( async (req, res) => {
-    try {
-        const org_name = await organisationDetailModel.find({}, 'org_name'); // Fetch only org_name
-        res.status(200).json({ data: org_name, message: "all org name retrieved"  });
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching organization names" });
-    }
-});
-
-exports.allorg_name = allorg_name;

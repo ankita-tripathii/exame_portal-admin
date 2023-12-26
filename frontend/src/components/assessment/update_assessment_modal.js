@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Dropdown } from 'react-bootstrap';
 
 const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) => {
     const [updatedAssessment, setUpdatedAssessment] = useState(null);
 
     const [orgList, setOrgList] = useState([]); // State to hold the list of organizations
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedOrg, setSelectedOrg] = useState('');
 
     useEffect(() => {
         setUpdatedAssessment(assessment); // Set assessment data on mount or update
 
          // Fetch organization names
-        fetchOrgNames();
+        fetchOrganizations();
 
     }, [assessment]);
 
 
-    const fetchOrgNames = async () => {
+    const fetchOrganizations = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/allorg_name");
+      const response = await fetch(`http://localhost:5000/api/allorganisation`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ searchQuery}),
+            });
 
         if (!response.ok) {
         throw new Error('Failed to fetch organizations');
@@ -38,6 +46,11 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
     }
   };
 
+  const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        fetchOrganizations();
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -45,6 +58,11 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
             ...updatedAssessment,
             [name]: value,
         });
+    };
+
+    const handleSelectOrg = (orgName) => {
+        setSelectedOrg(orgName);
+        setUpdatedAssessment({ ...updatedAssessment, org_name: orgName });
     };
 
     const handleSubmit = (e) => {
@@ -94,21 +112,29 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
             />
             </Form.Group>
           <Form.Group controlId="orgName">
-            <Form.Label></Form.Label>
-            <Form.Select
-              name="org_name"
-              placeholder="select orgaisation name"
-              value={updatedAssessment.org_name}
-              onChange={handleInputChange}
-              required
-            >  
-              {orgList.map((org) => (
-                <option key={org._id} value={org.org_name}>
-                  {org.org_name}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group><br/>
+                        <Form.Label>Organization Name</Form.Label>
+                        <Dropdown>
+                            <Dropdown.Toggle variant="secondary" id="dropdown-orgs">
+                                {selectedOrg || 'Select organization'}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Search organization name"
+                                    onChange={handleSearch}
+                                    value={searchQuery}
+                                />
+                                {orgList.map((org) => (
+                                    <Dropdown.Item
+                                        key={org._id}
+                                        onClick={() => handleSelectOrg(org.org_name)}
+                                    >
+                                        {org.org_name}
+                                    </Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Form.Group><br/>
                     <div className="d-flex justify-content-center">
                     <Button variant="primary" type="submit">Update</Button>
                     </div>

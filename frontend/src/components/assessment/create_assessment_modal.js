@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import styles from "./assessment.module.css";
-import { Modal, Form, Button } from 'react-bootstrap';
+import { Modal, Form, Button, Dropdown } from 'react-bootstrap';
 
 const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
   const [assessmentData, setAssessmentData] = useState({
@@ -11,19 +11,26 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
   });
 
   const [orgList, setOrgList] = useState([]); // To store the list of organization names
- 
+  const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
+  const [selectedOrg, setSelectedOrg] = useState('');
 
  // Fetch organization names when dropdown is clicked
   useEffect(() => {
     
       fetchOrganizations();
     
-  },[]);
+  },[searchQuery]);
 
 
   const fetchOrganizations = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/allorg_name");
+      const response = await fetch(`http://localhost:5000/api/allorganisation`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ searchQuery}),
+            });
 
         if (!response.ok) {
         throw new Error('Failed to fetch organizations');
@@ -46,6 +53,9 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
     }
   };
 
+const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
 
   const handleInputChange = (e) => {
@@ -59,6 +69,12 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
     e.preventDefault();
     handleSubmit(assessmentData); // Passing assessment data to handleCreate
   };
+
+  const handleSelectOrg = (orgName) => {
+    setSelectedOrg(orgName);
+    setAssessmentData({ ...assessmentData, org_name: orgName });
+  };
+
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -100,21 +116,29 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
               required
             />
             </Form.Group>
-          <Form.Group controlId="org_name">
-            <Form.Label>select orgaisation name</Form.Label>
-            <Form.Select
-              name="org_name"
-              placeholder="select orgaisation name"
-              value={assessmentData.org_name}
-              onChange={handleInputChange}
-              required
-            >  
-              {orgList.map((org) => (
-                <option key={org._id} value={org.org_name}>
-                  {org.org_name}
-                </option>
-              ))}
-            </Form.Select>
+         <Form.Group controlId="org_name">
+            <Form.Label></Form.Label>
+            <Dropdown>
+              <Dropdown.Toggle variant="secondary" id="dropdown-orgs">
+                {selectedOrg || 'Select organization'}
+              </Dropdown.Toggle>
+              <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                <Form.Control
+                  type="text"
+                  placeholder="Search organization name"
+                  onChange={handleSearch}
+                  value={searchQuery}
+                />
+                {orgList.map((org) => (
+                    <Dropdown.Item
+                      key={org._id}
+                      onClick={() => handleSelectOrg(org.org_name)}
+                    >
+                      {org.org_name}
+                    </Dropdown.Item>
+                  ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </Form.Group><br/>
           <div className="d-flex justify-content-center">
           <Button variant="primary" type="submit">

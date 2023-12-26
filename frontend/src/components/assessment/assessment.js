@@ -7,7 +7,7 @@ import TableComponent from './table';
 import CreateAssessmentModal from "./create_assessment_modal";
 import { Pagination } from 'react-bootstrap';
 import SearchBar from './searchbar';
-import { jwtDecode} from 'jwt-decode'; 
+//import { jwtDecode} from 'jwt-decode'; 
 
 import { Alert } from "react-bootstrap";
 
@@ -69,11 +69,11 @@ const handleSearch = (e) => {
 
     // Retrieve the token from localStorage
     const authToken = localStorage.getItem('token');
-   if (authToken) {
-     const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
+   //if (authToken) {
+     //const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
       // setUserRole(decodedToken.role);
       // setUserApproved(decodedToken.isApproved);
-    }
+    //}
   
 
     const response = await fetch('http://localhost:5000/api/createassessment', {

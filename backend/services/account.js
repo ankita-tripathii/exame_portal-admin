@@ -71,7 +71,7 @@ const logIN = (async (req, res) => {
     }
 
      try{
-        const token = jwt.sign({emailId: emailExists.emailId, name: emailExists.name, role: emailExists.role, isApproved: emailExists.isApproved}, process.env.TOKEN_SECRET,  {expiresIn: '1800s' });
+        const token = jwt.sign({emailId: emailExists.emailId, name: emailExists.name, role: emailExists.role, isApproved: emailExists.isApproved}, process.env.TOKEN_SECRET,  {expiresIn: '300s' });
     res.status(200).json({ token: token});
     }
 
