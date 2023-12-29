@@ -24,18 +24,6 @@ const assessmenteventsSchema = new mongoose.Schema({
             required: true
         }
     
-},
-organisation: {
-     org_id:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'organisation',
-            required: true
-        },
-    org_name:{
-            type: String,
-            ref: 'Organisation',
-            required: true
-    }
 }
 },
 {

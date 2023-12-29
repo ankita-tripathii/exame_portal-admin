@@ -1,43 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Dropdown } from 'react-bootstrap';
 
 const UpdateEventsModal = ({ show, handleClose, handleUpdate, events }) => {
     const [updatedEvents, setupdatedEvents] = useState(null);
 
-    const [titleList, settitleList] = useState([]); // State to hold the list of allassessment_title
+  const [titleList, settitleList] = useState([]); // To store the list of organization names
+  const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
+  const [selectedassessment, setselectedassessment] = useState('');
 
     useEffect(() => {
         setupdatedEvents(events); // Set events data on mount or update
 
          // Fetch allassessment_title
-        fetchassessment_title();
+        fetchassessments();
 
     }, [events]);
 
 
-    const fetchassessment_title = async () => {
+    const fetchassessments = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/allassessment_title");
+      const response = await fetch(`http://localhost:5000/api/allassessment`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({searchQuery}),
+            });
 
         if (!response.ok) {
-        throw new Error('Failed to fetch allassessment_title');
+        throw new Error('Failed to fetch assessments');
       }
 
       const result = await response.json();
-      console.log('Fetched Data:', result.data);
-      // Check if the result is an array before setting allassessment_title
+
+      // Check if the result is an array before setting orgList
       if (Array.isArray(result.data)) {
-        settitleList(result.data); // Update the allassessment_title list
-      } else {
+        settitleList(result.data); // Update the organization names list
+      } 
+      else {
         console.error('Fetched data is not an array:', result.data);
       }
       
     } 
+    
     catch (error) {
-      console.error('Error fetching allassessment_title:', error);
+      console.error('Error fetching assessments:', error);
     }
   };
 
+const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    fetchassessments();
+  };
+
+
+const handleSelectassessment = (assessment) => {
+    setselectedassessment(assessment); // Set the selected assessment
+
+    const selectedassessment = titleList.find((item) => item.title === assessment);
+
+    if (selectedassessment) {
+      setupdatedEvents({
+        ...updatedEvents,
+        title: selectedassessment.title,
+      });
+    }
+  };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -75,20 +103,28 @@ const UpdateEventsModal = ({ show, handleClose, handleUpdate, events }) => {
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="title">
-            <Form.Label>select title name</Form.Label>
-            <Form.Select
-              name="title"
-              placeholder="select title name"
-              value={updatedEvents.title}
-              onChange={handleInputChange}
-              required
-            >  
-              {titleList.map((assessment) => (
-                <option key={assessment._id} value={assessment.title}>
-                  {assessment.title}
-                </option>
-              ))}
-            </Form.Select>
+            <Form.Label></Form.Label>
+            <Dropdown>
+              <Dropdown.Toggle variant="secondary" id="dropdown-title">
+                {selectedassessment || 'Select title name'}
+              </Dropdown.Toggle>
+              <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                <Form.Control
+                  type="text"
+                  placeholder="Search title name"
+                  onChange={handleSearch}
+                  value={searchQuery}
+                />
+                {titleList.map((assessment) => (
+                    <Dropdown.Item
+                      key={assessment._id}
+                      onClick={() => handleSelectassessment(assessment.title)}
+                    >
+                      {assessment.title}
+                    </Dropdown.Item>
+                  ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </Form.Group>
           <Form.Group controlId="startDate">
             <Form.Label>Start Date</Form.Label>

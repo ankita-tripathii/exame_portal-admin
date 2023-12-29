@@ -86,7 +86,6 @@ const createassessmentevent = (async (req, res) => {
         const {
         title,
         slot: {startDate, lateLoginDuration, endDate, timeZone},
-        org_name
          } = req.body;
 
           const existingassessment = await assessmentDetailModel.findOne({ title });
@@ -94,12 +93,6 @@ const createassessmentevent = (async (req, res) => {
             if (!existingassessment) {
             return res.status(404).json({ message: 'title not found' });
         }
-
-        const existingOrganization = await organisationDetailModel.findOne({ org_name });
-
-            if (!existingOrganization) {
-                return res.status(404).json({ message: 'Organization not found' });
-            }
 
         // Adjusting the startDate and endDate according to the provided timeZone
             const adjustedStartDate = new Date(startDate).toLocaleString('en-US', { timeZone });
@@ -111,11 +104,7 @@ const createassessmentevent = (async (req, res) => {
                lateLoginDuration, 
                endDate: adjustedEndDate,
                timeZone
-           },
-        organisation: {
-               org_id: existingOrganization._id,
-               org_name: existingOrganization.org_name // Include org_name in the event
-                }
+           }
         })
 
         const dataToSave = await newevent.save(); // mongo save

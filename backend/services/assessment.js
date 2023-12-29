@@ -124,7 +124,7 @@ const allassessment = (async (req, res) => {
                 },
 
                 { title: 1, duration: 1, question_count: 1, organisation_id: 1 }
-            ).populate('organisation_id', 'org_name');
+            ).populate('organisation_id', 'org_name').select('title duration question_count organisation_id');
 
             res.status(200).json({ data: searchData, message: "Title or org name searched!" });
         }
@@ -139,14 +139,14 @@ exports.allassessment = allassessment;
 //------------------------------------------------------------------------------------------
 
 
-const allassessment_title =( async (req, res) => {
-    try {
-        const title = await assessmentDetailModel.find({}, 'title'); // Fetch only title
-        res.status(200).json({ data: title, message: "all title retrieved"  });
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching title" });
-    }
-});
+// const allassessment_title =( async (req, res) => {
+//     try {
+//         const title = await assessmentDetailModel.find({}, 'title'); // Fetch only title
+//         res.status(200).json({ data: title, message: "all title retrieved"  });
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching title" });
+//     }
+// });
 
-exports.allassessment_title = allassessment_title;
+// exports.allassessment_title = allassessment_title;
 

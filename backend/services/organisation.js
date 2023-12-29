@@ -114,6 +114,6 @@ const allorganisation = (async (req, res) => {
 
 exports.allorganisation = allorganisation;
 
-//-------------------------------------------------
+
 
 

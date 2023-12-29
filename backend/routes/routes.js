@@ -8,7 +8,7 @@ const {logIN} = require("../services/account");
 const {allassessment} = require('../services/assessment');
 const {createassessment} = require('../services/assessment');
 const {updateassessment} = require('../services/assessment');
-const {allassessment_title} = require('../services/assessment');
+//const {allassessment_title} = require('../services/assessment');
 
 
 
@@ -41,7 +41,7 @@ router.post('/login', logIN);
 router.post('/allassessment', allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
 router.put('/updateassessment/:assessment_id', adminApprovedMiddleware, updateassessment);
-router.get('/allassessment_title', allassessment_title);
+//router.get('/allassessment_title', allassessment_title);
 
 
 
