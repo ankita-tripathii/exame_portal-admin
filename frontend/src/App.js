@@ -1,5 +1,6 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+//<Outlet> is used to render the child elements of the parent route.
 
 import Login from "./pages/login";
 import Register from "./pages/register";
@@ -9,20 +10,34 @@ import Organisation from "./pages/organisation";
 import Candidate from "./pages/candidate";
 import Assessment from "./pages/assessment";
 
+
+const PrivateRoutes = () => {
+  const isLoggedIn = !!localStorage.getItem('token'); // Check if the user is logged in
+
+  return isLoggedIn ? <Outlet /> : <Navigate to='/login' />; //<Outlet> component can be used in a parent <Route> element to render out child elements.
+};
+
+
 function App() {
+
   return (
        <>
-            <Routes>
-              <Route exact path="/" element={<Home/>} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/event" element={<Event/>} />
-              <Route path="/organisation" element={<Organisation/>} />
-              <Route path="/assessment" element={<Assessment/>} />
-              <Route path="/candidate" element={<Candidate/>} />
-            </Routes>
+           
+      <Routes>
+        <Route element={<PrivateRoutes />}>//These routes will be rendered only if the user is authenticated.
+          <Route path='/event' element={<Event />} />
+          <Route path='/organisation' element={<Organisation />} />
+          <Route path='/assessment' element={<Assessment />} />
+          <Route path='/candidate' element={<Candidate />} />
+        </Route>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+      </Routes>
+    
        </>
   );
 }
 
 export default App;
+
