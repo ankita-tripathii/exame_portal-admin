@@ -38,7 +38,7 @@ const router = express.Router()
 router.post('/signup', signUP);
 router.post('/login', logIN);
 
-router.post('/allassessment', allassessment);
+router.post('/allassessment', adminApprovedMiddleware, allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
 router.put('/updateassessment/:assessment_id', adminApprovedMiddleware, updateassessment);
 router.get('/allassessment_title', allassessment_title);

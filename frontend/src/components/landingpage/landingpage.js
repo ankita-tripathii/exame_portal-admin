@@ -6,6 +6,7 @@
   import Button from 'react-bootstrap/Button';
  
 
+// Create a layout page, use react router Outlet ?
 const LandingPage = () => {
   return (
     <div>
