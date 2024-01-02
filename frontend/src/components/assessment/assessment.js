@@ -126,15 +126,16 @@ const handleSearch = (e) => {
       <>
             <Container>
             <Row className={styles.heading}>
-            <Col lg={8}>
+            <Col lg={7}>
             <h1 >Assessment Data</h1>
             </Col>
-            <Col lg={4}>
+            {(userRole === 'admin' && userApproved)  && (
+            <Col lg={5} className={styles.heading}>
                <div className="ml-auto">
                     <button className="btn btn-primary mr-2" onClick={handleShowModal}>Create Assessment</button>
                 </div>
             </Col>
-          
+            )}
             </Row><br/>
             <Row>
             <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />

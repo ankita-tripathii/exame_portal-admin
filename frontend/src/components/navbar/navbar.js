@@ -22,7 +22,7 @@ const DNavbar = () => {
 
   const [userName, setUserName] = useState('');
   const [userRole, setUserRole] = useState('');
-
+  const [userApproved, setUserApproved] = useState('');
 
   const [show, setShow] = useState(false);
 
@@ -31,16 +31,49 @@ const DNavbar = () => {
 
 
 useEffect(() => {
-    // Retrieve token from local storage
     const authToken = localStorage.getItem('token');
 
-    // Decode the token to get user information
     if (authToken) {
-     const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
+      const decodedToken = jwtDecode(authToken);
       setUserName(decodedToken.name);
       setUserRole(decodedToken.role);
+      setUserApproved(decodedToken.isApproved);
+
+      // Extract expiration time from the token and calculate remaining time
+      const tokenExpiration = decodedToken.exp * 1000; // in milliseconds
+      const currentTime = Date.now();
+
+      const timeUntilExpiration = tokenExpiration - currentTime;
+
+      if (timeUntilExpiration < 0) {
+        // Token has expired
+        handleLogout(); // Log the user out
+        navigate('/login'); // Redirect to login page
+      } else {
+        // Set a timeout to handle auto-logout when the token expires
+        const timeout = setTimeout(() => {
+          handleLogout();
+          navigate('/login');
+        }, timeUntilExpiration);
+
+        // Set another timeout for automatic logout after 10 seconds
+        //7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 604800000 milliseconds
+      const logoutTimeout = setTimeout(() => {
+        handleLogout();
+        navigate('/login');
+      }, 604800000);
+
+      
+
+        // Clear the logout timeout when the component unmounts or the token changes
+      return () => {
+        clearTimeout(timeout);
+        clearTimeout(logoutTimeout);
+      };
+      }
     }
-  }, []);
+  }, [navigate]);
+
 
 const handleLogout = () => {
     localStorage.removeItem('token'); // Clear token from localStorage
@@ -108,7 +141,9 @@ const handleLogout = () => {
                <ListGroup variant="flush">
                 <ListGroup.Item href="/organisation" action >Organisation</ListGroup.Item>
                 <ListGroup.Item href="/assessment" action >Assessment</ListGroup.Item>
+                 {(userRole === 'admin' && userApproved)  && (
                 <ListGroup.Item href="candidate" action >Candidate</ListGroup.Item>
+                 )}
               </ListGroup>
              </Offcanvas.Body>
            </Offcanvas>
