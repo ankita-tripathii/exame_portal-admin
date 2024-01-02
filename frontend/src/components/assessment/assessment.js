@@ -7,7 +7,7 @@ import TableComponent from './table';
 import CreateAssessmentModal from "./create_assessment_modal";
 import { Pagination } from 'react-bootstrap';
 import SearchBar from './searchbar';
-//import { jwtDecode} from 'jwt-decode'; 
+import { jwtDecode} from 'jwt-decode'; 
 
 import { Alert } from "react-bootstrap";
 
@@ -16,18 +16,33 @@ const AssessmentList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    const [userRole, setUserRole] = useState('');
+    const [userApproved, setUserApproved] = useState('');
      
 
      useEffect(() => {
         fetchData();
+        
+      const authToken = localStorage.getItem('token');
+      if (authToken) {
+      const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
+      setUserRole(decodedToken.role);
+      setUserApproved(decodedToken.isApproved);
+    }
+
     }, [currentPage, searchQuery]);
 
     const fetchData = async (query) => {
         try {
+
+            const authToken = localStorage.getItem('token');
+
             const response = await fetch(`http://localhost:5000/api/allassessment?page=${currentPage}&pageSize=5`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'auth-token': authToken // Add your authentication token here
                 },
                 body: JSON.stringify({ searchQuery: query }),
             });
@@ -60,20 +75,12 @@ const handleSearch = (e) => {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
 
-   // const [userRole, setUserRole] = useState('');
-   // const [userApproved, setUserApproved] = useState('');
-
 
   const handleCreate = async (assessmentData) => {
   try {
 
     // Retrieve the token from localStorage
     const authToken = localStorage.getItem('token');
-   //if (authToken) {
-     //const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
-      // setUserRole(decodedToken.role);
-      // setUserApproved(decodedToken.isApproved);
-    //}
   
 
     const response = await fetch('http://localhost:5000/api/createassessment', {
@@ -133,7 +140,7 @@ const handleSearch = (e) => {
             <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
             </Row><br/>
             <Row>
-            <TableComponent data={data} fetchData={fetchData}/>
+            <TableComponent data={data} fetchData={fetchData} userRole={userRole} userApproved={userApproved}/>
             </Row>
             <CreateAssessmentModal
         show={showModal}

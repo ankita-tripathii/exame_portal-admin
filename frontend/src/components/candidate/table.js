@@ -8,7 +8,7 @@ import UpdateCandidateModal from './update_candidate_modal';
 import { Alert } from "react-bootstrap";
 
 
-const TableComponent = ({ data, fetchData}) => {
+const TableComponent = ({ data, fetchData, userRole, userApproved }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedCandidate, setSelectedCandidate] = useState(null);
@@ -76,7 +76,9 @@ const TableComponent = ({ data, fetchData}) => {
                     <th>Name</th>
                     <th>Email Id</th>
                     <th>Organisation Name</th>
+                    {(userRole === 'admin' && userApproved) && (
                     <th>Edit</th>
+                     )}
                 </tr>
             </thead>
             <tbody>
@@ -85,7 +87,9 @@ const TableComponent = ({ data, fetchData}) => {
                                 <td>{candidate?.user_name || 'N/A'}</td>
                                <td>{candidate?.user_email || 'N/A'}</td>
                                 <td>{candidate?.organisation_id?.org_name || 'N/A'}</td>
+                                {(userRole === 'admin' && userApproved) && (
                                 <td><PencilSquare onClick={() => handleShowModal(candidate)} /></td>
+                                )}
                     </tr>
                 ))}
             </tbody>

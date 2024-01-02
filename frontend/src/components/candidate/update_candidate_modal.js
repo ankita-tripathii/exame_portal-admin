@@ -1,42 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Dropdown} from 'react-bootstrap';
 
 const UpdateCandidateModal = ({ show, handleClose, handleUpdate, candidate }) => {
     const [updatedCandidate, setUpdatedCandidate] = useState(null);
 
     const [orgList, setOrgList] = useState([]); // State to hold the list of organizations
+    const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
+    const [selectedOrg, setSelectedOrg] = useState('');
+ 
 
     useEffect(() => {
         setUpdatedCandidate(candidate); // Set candidate data on mount or update
 
          // Fetch organization names
-        fetchOrgNames();
+        fetchOrganizations();
 
     }, [candidate]);
 
 
-    const fetchOrgNames = async () => {
+    const fetchOrganizations = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/allorg_name");
+
+      const authToken = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/allorganisation`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': authToken // Add your authentication token here
+                },
+                body: JSON.stringify({ searchQuery}),
+            });
 
         if (!response.ok) {
         throw new Error('Failed to fetch organizations');
       }
 
       const result = await response.json();
-      console.log('Fetched Data:', result.data);
+
       // Check if the result is an array before setting orgList
       if (Array.isArray(result.data)) {
         setOrgList(result.data); // Update the organization names list
-      } else {
+      } 
+      else {
         console.error('Fetched data is not an array:', result.data);
       }
       
     } 
+    
     catch (error) {
       console.error('Error fetching organizations:', error);
     }
   };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSelectOrg = (orgName) => {
+    setSelectedOrg(orgName);
+    setUpdatedCandidate({ ...updatedCandidate, org_name: orgName });
+  };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -83,20 +107,29 @@ const UpdateCandidateModal = ({ show, handleClose, handleUpdate, candidate }) =>
               required
             />
           </Form.Group>
-          <Form.Group controlId="orgName">
-            <Form.Label>select orgaisation name</Form.Label>
-            <Form.Select
-              name="org_name"
-              value={updatedCandidate.org_name}
-              onChange={handleInputChange}
-              required
-            >  
-              {orgList.map((org) => (
-                <option key={org._id} value={org.org_name}>
-                  {org.org_name}
-                </option>
-              ))}
-            </Form.Select>
+          <Form.Group controlId="org_name">
+            <Form.Label>Select Organization</Form.Label>
+            <Dropdown>
+              <Dropdown.Toggle variant="secondary" id="dropdown-orgs">
+                {selectedOrg || 'Select'}
+              </Dropdown.Toggle>
+              <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                <Form.Control
+                  type="text"
+                  placeholder="Search organization name"
+                  onChange={handleSearch}
+                  value={searchQuery}
+                />
+                {orgList.map((org) => (
+                    <Dropdown.Item
+                      key={org._id}
+                      onClick={() => handleSelectOrg(org.org_name)}
+                    >
+                      {org.org_name}
+                    </Dropdown.Item>
+                  ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </Form.Group><br/>
                     <div className="d-flex justify-content-center">
                     <Button variant="primary" type="submit">Update</Button>

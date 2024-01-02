@@ -8,7 +8,7 @@ import UpdateOrganisationModal from './update_org_modal';
 import { Alert } from "react-bootstrap";
 
 
-const TableComponent = ({ data, fetchData, userRole }) => {
+const TableComponent = ({ data, fetchData, userRole, userApproved }) => {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedOrg, setSelectedOrg] = useState(null);
@@ -78,9 +78,9 @@ const TableComponent = ({ data, fetchData, userRole }) => {
                     <th>Pincode</th>
                     <th>Email Id</th>
                     <th>Contact No</th>
-                    {userRole === 'admin' ? (
+                     {(userRole === 'admin' && userApproved) && (
                     <th>Edit</th>
-                    ) : null}
+                    )}
                 </tr>
             </thead>
             <tbody>
@@ -91,9 +91,9 @@ const TableComponent = ({ data, fetchData, userRole }) => {
                                 <td>{organisation.location?.pincode || 'N/A'}</td>
                                 <td>{organisation.contact?.emailId || 'N/A'}</td>
                                 <td>{organisation.contact?.contactNo || 'N/A'}</td>
-                                {userRole === 'admin' ? (
+                               {(userRole === 'admin' && userApproved) && (
                                 <td><PencilSquare onClick={() => handleShowModal(organisation)} /></td>
-                                ) : null}
+                                )}
                     </tr>
                 ))}
             </tbody>

@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 //<Outlet> is used to render the child elements of the parent route.
 
 import Login from "./pages/login";
@@ -24,7 +24,7 @@ function App() {
        <>
            
       <Routes>
-        <Route element={<PrivateRoutes />}>//These routes will be rendered only if the user is authenticated.
+        <Route element={<PrivateRoutes />}>
           <Route path='/event' element={<Event />} />
           <Route path='/organisation' element={<Organisation />} />
           <Route path='/assessment' element={<Assessment />} />
@@ -41,3 +41,4 @@ function App() {
 
 export default App;
 
+//These routes will be rendered only if the user is authenticated.

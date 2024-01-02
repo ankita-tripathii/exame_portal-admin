@@ -8,7 +8,7 @@ import UpdateAssessmentModal from './update_assessment_modal';
 import { Alert } from "react-bootstrap";
 
 
-const TableComponent = ({ data, fetchData}) => {
+const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedAssessment, setSelectedAssessment] = useState(null);
@@ -77,7 +77,9 @@ const TableComponent = ({ data, fetchData}) => {
                     <th>Duration</th>
                     <th>Question Count</th>
                     <th>Organisation Name</th>
+                    {(userRole === 'admin' && userApproved) && (
                     <th>Edit</th>
+                     )}
                 </tr>
             </thead>
             <tbody>
@@ -87,7 +89,9 @@ const TableComponent = ({ data, fetchData}) => {
                                <td>{assessment?.duration || 'N/A'}</td>
                                 <td>{assessment?.question_count || 'N/A'}</td>
                                 <td>{assessment?.organisation_id?.org_name || 'N/A'}</td>
+                                {(userRole === 'admin' && userApproved) && (
                                 <td><PencilSquare onClick={() => handleShowModal(assessment)} /></td>
+                                )}
                     </tr>
                 ))}
             </tbody>

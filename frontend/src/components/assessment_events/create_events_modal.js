@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-//import styles from "./assessment.module.css";
+import styles from "./events.module.css";
 import { Modal, Form, Button, Dropdown } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
-import { BsCalendar } from 'react-icons/bs';
+import { Calendar } from 'react-bootstrap-icons';
+
 const moment = require('moment-timezone');
 
 
 
 
 const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
+
 
   const [assessmenteventData, setassessmenteventData] = useState({
     title: '',
@@ -37,10 +37,13 @@ const CreateEventsModal = ({ show, handleClose, handleSubmit }) => {
 
   const fetchassessments = async () => {
     try {
+
+      const authToken = localStorage.getItem('token');
       const response = await fetch(`http://localhost:5000/api/allassessment`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'auth-token': authToken // Add your authentication token here
                 },
                 body: JSON.stringify({ searchQuery}),
             });
@@ -158,10 +161,10 @@ const { startDate, endDate, timeZone } = assessmenteventData.slot;
       <Modal.Body>
         <Form onSubmit={handleFormSubmit}>
          <Form.Group controlId="title">
-            <Form.Label></Form.Label>
+            <Form.Label>Select Title Name</Form.Label>
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-title">
-                {selectedassessment || 'Select title name'}
+                {selectedassessment || 'Select'}
               </Dropdown.Toggle>
               <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
                 <Form.Control
@@ -180,9 +183,11 @@ const { startDate, endDate, timeZone } = assessmenteventData.slot;
                   ))}
               </Dropdown.Menu>
             </Dropdown>
-          </Form.Group>
+          </Form.Group><br/>
+
           <Form.Group controlId="startDate">
             <Form.Label>Start Date</Form.Label>
+            <div className="d-flex align-items-center">
             <DatePicker
               selected={assessmenteventData.slot.startDate}
               onChange={(date) => handleDateChange(date, 'startDate')}
@@ -190,7 +195,8 @@ const { startDate, endDate, timeZone } = assessmenteventData.slot;
               timeFormat="HH:mm"
               dateFormat="MMMM d, yyyy h:mm aa"
             />
-          </Form.Group>
+            </div>
+          </Form.Group><br/>
           <Form.Group controlId="lateLoginDuration">
             <Form.Label>Late Login Duration</Form.Label>
             <Form.Control
@@ -201,9 +207,10 @@ const { startDate, endDate, timeZone } = assessmenteventData.slot;
               onChange={handleInputChange}
               required
             />
-          </Form.Group>
+          </Form.Group><br/>
           <Form.Group controlId="endDate">
             <Form.Label>End Date</Form.Label>
+            <div className="d-flex align-items-center">
             <DatePicker
               selected={assessmenteventData.slot.endDate}
               onChange={(date) => handleDateChange(date, 'endDate')}
@@ -211,7 +218,8 @@ const { startDate, endDate, timeZone } = assessmenteventData.slot;
               timeFormat="HH:mm"
               dateFormat="MMMM d, yyyy h:mm aa"
             />
-          </Form.Group>
+            </div>
+          </Form.Group><br/>
           <Form.Group controlId="timeZone">
             <Form.Label>Timezone</Form.Label>
             <Form.Control

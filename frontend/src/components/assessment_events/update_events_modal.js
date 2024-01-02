@@ -19,12 +19,15 @@ const UpdateEventsModal = ({ show, handleClose, handleUpdate, events }) => {
 
     const fetchassessments = async () => {
     try {
+
+      const authToken = localStorage.getItem('token');
       const response = await fetch(`http://localhost:5000/api/allassessment`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'auth-token': authToken // Add your authentication token here
                 },
-                body: JSON.stringify({searchQuery}),
+                body: JSON.stringify({ searchQuery}),
             });
 
         if (!response.ok) {
@@ -47,6 +50,7 @@ const UpdateEventsModal = ({ show, handleClose, handleUpdate, events }) => {
       console.error('Error fetching assessments:', error);
     }
   };
+
 
 const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -102,11 +106,11 @@ const handleSelectassessment = (assessment) => {
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="title">
-            <Form.Label></Form.Label>
+                   <Form.Group controlId="title">
+            <Form.Label>Selected Title Name</Form.Label>
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-title">
-                {selectedassessment || 'Select title name'}
+                {selectedassessment || 'Select'}
               </Dropdown.Toggle>
               <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
                 <Form.Control
@@ -125,7 +129,7 @@ const handleSelectassessment = (assessment) => {
                   ))}
               </Dropdown.Menu>
             </Dropdown>
-          </Form.Group>
+          </Form.Group><br/>
           <Form.Group controlId="startDate">
             <Form.Label>Start Date</Form.Label>
             <Form.Control
@@ -135,7 +139,7 @@ const handleSelectassessment = (assessment) => {
               onChange={handleInputChange}
               required
             />
-          </Form.Group>
+          </Form.Group><br/>
           <Form.Group controlId="lateLoginDuration">
             <Form.Label>Late Login Duration</Form.Label>
             <Form.Control
@@ -145,7 +149,7 @@ const handleSelectassessment = (assessment) => {
               onChange={handleInputChange}
               required
             />
-          </Form.Group>
+          </Form.Group><br/>
           <Form.Group controlId="endDate">
             <Form.Label>End Date</Form.Label>
             <Form.Control

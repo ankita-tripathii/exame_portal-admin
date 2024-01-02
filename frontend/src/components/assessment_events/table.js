@@ -8,7 +8,7 @@ import UpdateEventsModal from './update_events_modal';
 import { Alert } from "react-bootstrap";
 
 
-const TableComponent = ({ data, fetchData}) => {
+const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -78,7 +78,9 @@ const TableComponent = ({ data, fetchData}) => {
                     <th>lateLogin Duration</th>
                     <th>End Date</th>
                     <th>Organisation Name</th>
+                     {(userRole === 'admin' && userApproved) && (
                     <th>Edit</th>
+                    )}
                 </tr>
             </thead>
             <tbody>
@@ -89,7 +91,9 @@ const TableComponent = ({ data, fetchData}) => {
                                 <td>{events.slot?.lateLoginDuration || 'N/A'}</td>
                                 <td>{events.slot?.endDate || 'N/A'}</td>
                                 <td>{events?.organisation?.org_name || 'N/A'}</td>
+                                {(userRole === 'admin' && userApproved) && (
                                 <td><PencilSquare onClick={() => handleShowModal(events)} /></td>
+                                )}
                     </tr>
                 ))}
             </tbody>

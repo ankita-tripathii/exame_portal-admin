@@ -38,24 +38,24 @@ const router = express.Router()
 router.post('/signup', signUP);
 router.post('/login', logIN);
 
-router.post('/allassessment', allassessment);
+router.post('/allassessment', adminApprovedMiddleware, allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
 router.put('/updateassessment/:assessment_id', adminApprovedMiddleware, updateassessment);
 //router.get('/allassessment_title', allassessment_title);
 
 
 
-router.post('/allevent', allevent);
+router.post('/allevent', adminApprovedMiddleware, allevent);
 router.post('/createassessmentevent', adminApprovedMiddleware, createassessmentevent);
 router.put('/updateassessmentevent/:assessmentevent_id', adminApprovedMiddleware, updateassessmentevent);
 
 
-router.post('/allcandidate', allcandidate);
+router.post('/allcandidate', adminApprovedMiddleware, allcandidate);
 router.post('/createcandidate', adminApprovedMiddleware, createcandidate);
 router.put('/updatecandidate/:candidate_id', adminApprovedMiddleware, updatecandidate);
 
 
-router.post('/allorganisation', allorganisation);
+router.post('/allorganisation', adminApprovedMiddleware, allorganisation);
 router.post('/createorganisation', adminApprovedMiddleware, createorganisation);
 router.put('/updateorganisation/:org_id', adminApprovedMiddleware, updateorganisation);
 

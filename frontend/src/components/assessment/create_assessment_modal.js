@@ -24,10 +24,13 @@ const CreateAssessmentModal = ({ show, handleClose, handleSubmit }) => {
 
   const fetchOrganizations = async () => {
     try {
+
+      const authToken = localStorage.getItem('token');
       const response = await fetch(`http://localhost:5000/api/allorganisation`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'auth-token': authToken // Add your authentication token here
                 },
                 body: JSON.stringify({ searchQuery}),
             });
@@ -117,10 +120,10 @@ const handleSearch = (e) => {
             />
             </Form.Group>
          <Form.Group controlId="org_name">
-            <Form.Label></Form.Label>
+            <Form.Label>Select Organization</Form.Label>
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-orgs">
-                {selectedOrg || 'Select organization'}
+                {selectedOrg || 'Select'}
               </Dropdown.Toggle>
               <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'scroll' }}>
                 <Form.Control

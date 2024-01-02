@@ -16,18 +16,29 @@ const EventsList = () => {
     const [search_assessment_title, setsearch_assessment_title] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+   const [userRole, setUserRole] = useState('');
+    const [userApproved, setUserApproved] = useState('');
      
 
      useEffect(() => {
         fetchData();
+        const authToken = localStorage.getItem('token');
+    if (authToken) {
+      const decodedToken = jwtDecode(authToken);
+      setUserRole(decodedToken.role);
+      setUserApproved(decodedToken.isApproved);
+    }
     }, [currentPage, search_assessment_title]);
 
     const fetchData = async () => {
         try {
+             const authToken = localStorage.getItem('token');
             const response = await fetch(`http://localhost:5000/api/allevent?page=${currentPage}&limit=5`,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'auth-token': authToken // Add your authentication token here
                 },
                 body: JSON.stringify({ 
                     filter: { 
@@ -37,6 +48,10 @@ const EventsList = () => {
                     search_assessment_title
                 }),
                 })
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
 
             const result = await response.json();
             setData(result.data);
@@ -67,20 +82,12 @@ const handleSearch = (e) => {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
 
-   // const [userRole, setUserRole] = useState('');
-   // const [userApproved, setUserApproved] = useState('');
-
 
   const handleCreate = async (assessmenteventData) => {
   try {
 
     // Retrieve the token from localStorage
     const authToken = localStorage.getItem('token');
-   if (authToken) {
-     const decodedToken = jwtDecode(authToken);  // Implement your token decoding logic here
-      // setUserRole(decodedToken.role);
-      // setUserApproved(decodedToken.isApproved);
-    }
   
 
     const response = await fetch('http://localhost:5000/api/createassessmentevent', {
@@ -129,18 +136,19 @@ const handleSearch = (e) => {
             <Col lg={7}>
             <h1 >Event Data</h1>
             </Col>
+            {(userRole === 'admin' && userApproved)  && (
             <Col lg={5} className={styles.heading}>
                <div className="ml-auto">
                     <button className="btn btn-primary mr-2" onClick={handleShowModal} >Create Event</button>
                 </div>
             </Col>
-          
+          )}
             </Row><br/>
             <Row>
             <SearchBar handleSearch={handleSearch} setsearch_assessment_title={setsearch_assessment_title} />
             </Row><br/>
             <Row>
-            <TableComponent data={data} fetchData={fetchData}/>
+            <TableComponent data={data} fetchData={fetchData} userRole={userRole} userApproved={userApproved}/>
             </Row>
 
              <CreateEventsModal
