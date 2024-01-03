@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import { PencilSquare } from 'react-bootstrap-icons';
 import styles from "./events.module.css";
 import UpdateEventsModal from './update_events_modal';
+import EventCandidateModal from './event_candidate_count_modal';
 import { Alert } from "react-bootstrap";
 
 
@@ -14,10 +15,21 @@ const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     const handleCloseModal = () => setShowModal(false);
-    const handleShowModal = (data) => {
-        setSelectedEvent(data);
-        setShowModal(true);
+    const handleShowModal = (data) => {setSelectedEvent(data); setShowModal(true);};
+   
+
+
+    const [showCandidateModal, setShowCandidateModal] = useState(false);
+    const [eventCandidateCount, setEventCandidateCount] = useState(0); // State to store event candidate count
+
+    const handleCloseCandidateModal = () => setShowCandidateModal(false);
+    const handleShowCandidateModal = (eventCandidateCount) => {
+        setSelectedEvent(null); // Clear the selected event
+        setShowCandidateModal(true);
+        // Set the event candidate count
+        setEventCandidateCount(eventCandidateCount);
     };
+
 
   const [alertVariant, setAlertVariant] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
@@ -85,7 +97,7 @@ const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
             </thead>
             <tbody>
                 {data.map((events) => (
-                            <tr key={events._id} >
+                            <tr key={events._id} onClick={() => handleShowCandidateModal(events.eventCandidateCount)} >
                                 <td>{events?.event_assessment?.title || 'N/A'}</td>
                                 <td>{events.slot?.startDate || 'N/A'}</td>
                                 <td>{events.slot?.lateLoginDuration || 'N/A'}</td>
@@ -105,7 +117,11 @@ const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
                 handleUpdate={handleUpdateEvents}
                 events={selectedEvent}
                />
-
+        <EventCandidateModal
+                show={showCandidateModal}
+                handleClose={handleCloseCandidateModal}
+                eventCandidateCount={eventCandidateCount}
+            />
               
         </Row>
         {showAlert && (

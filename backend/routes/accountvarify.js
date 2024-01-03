@@ -19,14 +19,14 @@ module.exports = function async (req, res, next) {
                     const allowedRoutesForDeliveryHead = ['allassessment', 'allevent', 'allcandidate', 'allorganisation'];
 
                     const apiPath = req.originalUrl.split("/")[2];
-                    const finalurl = GetPathFromUrl(apiPath);
-                    console.log(finalurl);
+                    const finalaApiPath = GetPathFromUrl(apiPath);
+                    console.log(finalaApiPath);
 
                     // Access control logic
             if (role === 'admin' && isApproved) {
                 req.decodedToken = decoded; // Attaching decoded token data to the request object
                 next(); // Allow access for admin to all routes
-            } else if (role === 'delivery_head' && isApproved && allowedRoutesForDeliveryHead.indexOf(finalurl) !== -1) {
+            } else if (role === 'delivery_head' && isApproved && allowedRoutesForDeliveryHead.indexOf(finalaApiPath) !== -1) {
                 req.decodedToken = decoded; // Attaching decoded token data to the request object
                 next(); // Allow access for delivery_head to specific routes
             } else {

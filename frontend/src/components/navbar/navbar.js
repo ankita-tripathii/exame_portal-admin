@@ -61,7 +61,7 @@ useEffect(() => {
       const logoutTimeout = setTimeout(() => {
         handleLogout();
         navigate('/login');
-      }, 604800000);
+      }, 1800000);
 
       
 

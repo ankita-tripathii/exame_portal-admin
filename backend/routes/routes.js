@@ -61,6 +61,6 @@ router.put('/updateorganisation/:org_id', adminApprovedMiddleware, updateorganis
 
 
 router.post('/createeventcandidate', adminApprovedMiddleware, createeventcandidate);
-router.get('/geteventcandidate/:id', geteventcandidate);
+router.get('/geteventcandidate/:id', adminApprovedMiddleware, geteventcandidate);
 
 module.exports = router;

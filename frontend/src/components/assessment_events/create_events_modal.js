@@ -3,7 +3,6 @@ import styles from "./events.module.css";
 import { Modal, Form, Button, Dropdown } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Calendar } from 'react-bootstrap-icons';
 
 const moment = require('moment-timezone');
 
@@ -115,16 +114,6 @@ const handleDateChange = (date, name) => {
       slot: {
         ...assessmenteventData.slot,
         [name]: date,
-      },
-    });
-  };
-
-  const handleTimeChange = (time) => {
-    setassessmenteventData({
-      ...assessmenteventData,
-      slot: {
-        ...assessmenteventData.slot,
-        startDate: time,
       },
     });
   };
