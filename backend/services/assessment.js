@@ -135,18 +135,3 @@ const allassessment = (async (req, res) => {
 })
 
 exports.allassessment = allassessment;
-
-//------------------------------------------------------------------------------------------
-
-
-// const allassessment_title =( async (req, res) => {
-//     try {
-//         const title = await assessmentDetailModel.find({}, 'title'); // Fetch only title
-//         res.status(200).json({ data: title, message: "all title retrieved"  });
-//     } catch (error) {
-//         res.status(500).json({ message: "Error fetching title" });
-//     }
-// });
-
-// exports.allassessment_title = allassessment_title;
-

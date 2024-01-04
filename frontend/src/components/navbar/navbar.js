@@ -11,9 +11,10 @@
   import styles from "./navbar.module.css";
   import { jwtDecode} from 'jwt-decode'; 
   import { useNavigate } from 'react-router-dom';
+  import EventCandidateCreateModal from '../event_candidate/event_candidate_create_modal';
 
 
-const DNavbar = () => {
+  const DNavbar = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -72,6 +73,8 @@ useEffect(() => {
       };
       }
     }
+
+
   }, [navigate]);
 
 
@@ -92,6 +95,54 @@ const handleLogout = () => {
     }, 1000);
 
   };
+//--------------------------------------------------------------------------------------------------
+
+  const [showEventCandidateModal, setShowEventCandidateModal] = useState(false);
+  const handleCloseModal = () => setShowEventCandidateModal(false);
+  const handleShowModal = () => setShowEventCandidateModal(true);
+
+  const [alertVariant, setAlertVariant] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+
+
+const handleEventCandidateCreate = async (eventcandidateData) => {
+    try {
+
+      const authToken = localStorage.getItem('token');
+
+      const response = await fetch('http://localhost:5000/api/createeventcandidate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth-token': authToken,
+        },
+        body: JSON.stringify(eventcandidateData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setAlertVariant('success');
+        setAlertMessage(result.message);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 3000); // Close success alert after 1 seconds
+
+        setShowEventCandidateModal(false);
+      } else {
+         setAlertVariant('danger');
+         setAlertMessage(result.message || 'Failed to create Event Candidate');
+         setShowAlert(true);
+         setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
+      }
+    } catch (error) {
+      setAlertVariant('danger');
+      setAlertMessage(error.message || 'Error creating Event Candidate');
+      setShowAlert(true);  
+      setTimeout(() => setShowAlert(false), 1000); // Close success alert after 1 seconds
+    }
+  };
+
 
   return (
 
@@ -144,6 +195,7 @@ const handleLogout = () => {
                  {(userRole === 'admin' && userApproved)  && (
                 <ListGroup.Item href="candidate" action >Candidate</ListGroup.Item>
                  )}
+                <ListGroup.Item onClick={handleShowModal} action >Event_Candidate</ListGroup.Item>
               </ListGroup>
              </Offcanvas.Body>
            </Offcanvas>
@@ -182,7 +234,29 @@ const handleLogout = () => {
       </Alert>
     </div>
     )}
-    </>
+
+     <EventCandidateCreateModal
+        show={showEventCandidateModal}
+        handleClose={handleCloseModal}
+        handleSubmit={handleEventCandidateCreate}
+      />
+
+      {showAlert && (
+          <div
+            style={{
+              position: 'fixed',
+              top: '10px',
+              right: '10px',
+              zIndex: 9999,
+            }}
+          >
+            <Alert variant={alertVariant}>
+              {alertMessage}
+            </Alert>
+          </div>
+        )}
+
+      </>
   );
 }
 

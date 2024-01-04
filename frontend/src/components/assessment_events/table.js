@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import { PencilSquare } from 'react-bootstrap-icons';
 import styles from "./events.module.css";
 import UpdateEventsModal from './update_events_modal';
-import EventCandidateModal from './event_candidate_count_modal';
+import EventCandidateCountModal from '../event_candidate/event_candidate_count_modal';
 import { Alert } from "react-bootstrap";
 
 
@@ -117,7 +117,7 @@ const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
                 handleUpdate={handleUpdateEvents}
                 events={selectedEvent}
                />
-        <EventCandidateModal
+        <EventCandidateCountModal
                 show={showCandidateModal}
                 handleClose={handleCloseCandidateModal}
                 eventCandidateCount={eventCandidateCount}

@@ -1,9 +1,9 @@
 import React from 'react';
-import styles from "./events.module.css";
+import styles from "./event_candidate.module.css";
 import { Modal, Button } from 'react-bootstrap';
 
 
-const EventCandidateModal = ({ show, handleClose, eventCandidateCount }) => {
+const EventCandidateCountModal = ({ show, handleClose, eventCandidateCount }) => {
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header>
@@ -21,4 +21,4 @@ const EventCandidateModal = ({ show, handleClose, eventCandidateCount }) => {
     );
 };
 
-export default EventCandidateModal;
+export default EventCandidateCountModal;

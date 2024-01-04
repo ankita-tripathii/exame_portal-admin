@@ -8,77 +8,6 @@ const assessmentDetailModel = require('../models/assessment');
 const organisationDetailModel = require('../models/organisation');
 
 
-// const allevent = ( async (req, res) => {
-//     try{
-//         const {filter, search_assessment_title} = req.body;
-
-// //         //let data= await assessmenteventDetailModel.find().populate("assessment_id"); // assessment title, candidate count
-
-// //         // M1
-// //              // let events = await assessmenteventDetailModel.find({}); // Fetch all events
-// //              // let eventData = [];
-
-// //              //    await Promise.all(events.map(async (event) => {
-// //              //        const eventCandidateCount = await eventCandidateModel.countDocuments({ event: event._id });
-// //              //        const { _id, slot, createdAt, assessment_id } = event;
-// //              //        const event_assessment = await assessmentModel.findById(assessment_id);
-        
-// //              //        eventData.push({
-// //              //            _id,
-// //              //            eventCandidateCount,
-// //              //            slot,
-// //              //            createdAt,
-// //              //            assessment_id,
-// //              //            event_assessment
-// //              //        });
-// //              //    }));
-
-// //         // M2
-// //                // Aggregate query pipeline  : lookup, unwind, project, match
-//         let data1 = await assessmenteventDetailModel.aggregate(
-//             [   
-//                 {
-//                   $lookup : {
-//                     from: "eventcandidates", //notice the "s" at the end
-//                     localField: "_id",
-//                     foreignField: "event",
-//                     as: "event_candidate"
-//                   }   
-//                 },
-//                 {
-//                   $lookup : {
-//                     from: "assessments", //notice the "s" at the end
-//                     localField: "assessment_id",
-//                     foreignField: "_id",
-//                     as: "event_assessment"
-//                   }   
-//                 },
-//                 {$unwind: '$event_assessment'},
-//                 {
-//                     $project: {
-//                         eventCandidateCount : { $size: "$event_candidate" },
-//                         slot : 1,
-//                         createdAt: 1,
-//                         assessment_id: 1,
-//                         event_assessment: 1
-//                     }
-//                 }
-//             ]
-//             );
-       
-
-//        res.status(200).json(data1)
-//     }
-//     catch(error){
-//         res.status(500).json({message: error.message})
-//     }
-// })
-
-// exports.allevent = allevent;
-
-//----------------------------------------------------------------------------------------
-
-
 const createassessmentevent = (async (req, res) => {
 
      try{
@@ -263,3 +192,74 @@ const allevent = async (req, res) => {
 
 exports.allevent = allevent;
 
+//-------------------------------------------------------------------------------------------------
+
+// const allevent = ( async (req, res) => {
+//     try{
+//         const {filter, search_assessment_title} = req.body;
+
+// //         //let data= await assessmenteventDetailModel.find().populate("assessment_id"); // assessment title, candidate count
+
+// //         // M1
+// //              // let events = await assessmenteventDetailModel.find({}); // Fetch all events
+// //              // let eventData = [];
+
+// //              //    await Promise.all(events.map(async (event) => {
+// //              //        const eventCandidateCount = await eventCandidateModel.countDocuments({ event: event._id });
+// //              //        const { _id, slot, createdAt, assessment_id } = event;
+// //              //        const event_assessment = await assessmentModel.findById(assessment_id);
+        
+// //              //        eventData.push({
+// //              //            _id,
+// //              //            eventCandidateCount,
+// //              //            slot,
+// //              //            createdAt,
+// //              //            assessment_id,
+// //              //            event_assessment
+// //              //        });
+// //              //    }));
+
+// //         // M2
+// //                // Aggregate query pipeline  : lookup, unwind, project, match
+//         let data1 = await assessmenteventDetailModel.aggregate(
+//             [   
+//                 {
+//                   $lookup : {
+//                     from: "eventcandidates", //notice the "s" at the end
+//                     localField: "_id",
+//                     foreignField: "event",
+//                     as: "event_candidate"
+//                   }   
+//                 },
+//                 {
+//                   $lookup : {
+//                     from: "assessments", //notice the "s" at the end
+//                     localField: "assessment_id",
+//                     foreignField: "_id",
+//                     as: "event_assessment"
+//                   }   
+//                 },
+//                 {$unwind: '$event_assessment'},
+//                 {
+//                     $project: {
+//                         eventCandidateCount : { $size: "$event_candidate" },
+//                         slot : 1,
+//                         createdAt: 1,
+//                         assessment_id: 1,
+//                         event_assessment: 1
+//                     }
+//                 }
+//             ]
+//             );
+       
+
+//        res.status(200).json(data1)
+//     }
+//     catch(error){
+//         res.status(500).json({message: error.message})
+//     }
+// })
+
+// exports.allevent = allevent;
+
+//----------------------------------------------------------------------------------------

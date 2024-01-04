@@ -8,7 +8,7 @@ const {logIN} = require("../services/account");
 const {allassessment} = require('../services/assessment');
 const {createassessment} = require('../services/assessment');
 const {updateassessment} = require('../services/assessment');
-//const {allassessment_title} = require('../services/assessment');
+
 
 
 
@@ -29,7 +29,7 @@ const {updateorganisation} = require('../services/organisation');
 
 
 const {createeventcandidate} = require('../services/event_candidate');
-const{geteventcandidate} = require('../services/event_candidate');
+
 
 const router = express.Router()
 
@@ -41,7 +41,7 @@ router.post('/login', logIN);
 router.post('/allassessment', adminApprovedMiddleware, allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
 router.put('/updateassessment/:assessment_id', adminApprovedMiddleware, updateassessment);
-//router.get('/allassessment_title', allassessment_title);
+
 
 
 
@@ -61,6 +61,6 @@ router.put('/updateorganisation/:org_id', adminApprovedMiddleware, updateorganis
 
 
 router.post('/createeventcandidate', adminApprovedMiddleware, createeventcandidate);
-router.get('/geteventcandidate/:id', adminApprovedMiddleware, geteventcandidate);
+
 
 module.exports = router;
