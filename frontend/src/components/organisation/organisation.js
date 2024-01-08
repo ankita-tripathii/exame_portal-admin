@@ -32,6 +32,7 @@ const OrganisationList = () => {
 
     }, [currentPage, searchQuery]);
 
+
     const fetchData = async (query) => {
         try {
 
@@ -52,6 +53,7 @@ const OrganisationList = () => {
             console.error('Error fetching data:', error);
         }
     };
+    
 
 const handleSearch = (e) => {
         e.preventDefault();
@@ -166,7 +168,8 @@ const handleSearch = (e) => {
           <Row className="justify-content-center">
               <Pagination>
                 {[...Array(totalPages).keys()].map((page) => (
-                  <Pagination.Item key={page + 1} active={currentPage === page + 1} onClick={() => handlePagination(page + 1)}> {page + 1}
+                  <Pagination.Item key={page + 1} active={currentPage === page + 1} onClick={() => handlePagination(page + 1)}>
+                   {page + 1}
                   </Pagination.Item>
                         ))}
                </Pagination>

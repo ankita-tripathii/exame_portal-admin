@@ -120,27 +120,31 @@ const handleDateChange = (date, name) => {
 
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-const { startDate, endDate, timeZone } = assessmenteventData.slot;
+  const { startDate, endDate, timeZone } = assessmenteventData.slot;
 
-  // Convert the startDate and endDate to the selected time zone
-  const convertedStartDate = moment.utc(startDate).tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
-  const convertedEndDate = moment.utc(endDate).tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
+  // Create a moment object from the provided startDate and endDate in IST
+  const istStartDate = moment.tz(startDate, 'Asia/Kolkata');
+  const istEndDate = moment.tz(endDate, 'Asia/Kolkata');
+  
+// Convert IST startDate and endDate to the selected timeZone
+  const convertedStartDate = istStartDate.clone().tz(timeZone).toDate();
+  const convertedEndDate = istEndDate.clone().tz(timeZone).toDate();
 
-   // Update the startDate and endDate in the assessmenteventData state
+
+  // Update the startDate and endDate in the assessmenteventData state
   const updatedEventData = {
     ...assessmenteventData,
     slot: {
       ...assessmenteventData.slot,
       startDate: convertedStartDate,
       endDate: convertedEndDate,
-      // Include other fields if needed
     },
   };
 
-    handleSubmit(updatedEventData); // Passing event data to handleCreate
-  };
+  handleSubmit(updatedEventData); // Passing event data to handleCreate
+};
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -217,9 +221,9 @@ const { startDate, endDate, timeZone } = assessmenteventData.slot;
               value={assessmenteventData.slot.timeZone}
               onChange={handleInputChange}
             >
-              <option value="Asia/Kolkata">India</option>
-              <option value="America/New_York">US</option>
-              <option value="Asia/Dhaka">Bangladesh</option>
+              <option value="Asia/Kolkata">India (UTC+5:30)</option>
+              <option value="America/New_York">US (UTC-5:00)</option>
+              <option value="Asia/Dhaka">Bangladesh (UTC+6:00)</option>
             </Form.Control>
           </Form.Group><br/>
           <div className="d-flex justify-content-center">

@@ -97,8 +97,8 @@ const TableComponent = ({ data, fetchData, userRole, userApproved}) => {
             </thead>
             <tbody>
                 {data.map((events) => (
-                            <tr key={events._id} onClick={() => handleShowCandidateModal(events.eventCandidateCount)} >
-                                <td>{events?.event_assessment?.title || 'N/A'}</td>
+                            <tr key={events._id}>
+                                <td onClick={() => handleShowCandidateModal(events.eventCandidateCount)}>{events?.event_assessment?.title || 'N/A'}</td>
                                 <td>{events.slot?.startDate || 'N/A'}</td>
                                 <td>{events.slot?.lateLoginDuration || 'N/A'}</td>
                                 <td>{events.slot?.endDate || 'N/A'}</td>

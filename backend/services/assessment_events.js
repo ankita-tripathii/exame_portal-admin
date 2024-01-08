@@ -6,7 +6,7 @@ const assessmenteventDetailModel = require('../models/assessment_events');
 const eventCandidateModel = require('../models/event_candidate');
 const assessmentDetailModel = require('../models/assessment');
 const organisationDetailModel = require('../models/organisation');
-
+const moment = require('moment-timezone');
 
 const createassessmentevent = (async (req, res) => {
 
@@ -23,15 +23,19 @@ const createassessmentevent = (async (req, res) => {
             return res.status(404).json({ message: 'title not found' });
         }
 
-        // Adjusting the startDate and endDate according to the provided timeZone
-            const adjustedStartDate = new Date(startDate).toLocaleString('en-US', { timeZone });
-            const adjustedEndDate = new Date(endDate).toLocaleString('en-US', { timeZone });
+            // Create a moment object from the provided startDate and endDate in IST
+      const istStartDate = moment.tz(startDate, 'Asia/Kolkata');
+      const istEndDate = moment.tz(endDate, 'Asia/Kolkata');
+
+      // Convert IST startDate and endDate to the selected timeZone
+      const convertedStartDate = istStartDate.clone().tz(timeZone).toDate();
+      const convertedEndDate = istEndDate.clone().tz(timeZone).toDate();
 
      const newevent = new assessmenteventDetailModel({
         assessment_id: existingassessment._id,
-        slot: {startDate: adjustedStartDate, 
+        slot: {startDate: convertedStartDate, 
                lateLoginDuration, 
-               endDate: adjustedEndDate,
+               endDate: convertedEndDate,
                timeZone
            }
         })
