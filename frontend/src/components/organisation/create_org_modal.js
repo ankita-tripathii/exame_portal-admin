@@ -12,8 +12,7 @@ const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
   contact: {
     emailId: '',
     contactNo: '',
-  },
-  isApproved: false
+  }
   });
 
   const handleInputChange = (e) => {
@@ -22,13 +21,8 @@ const CreateOrganizationModal = ({ show, handleClose, handleSubmit }) => {
 
   if (subFieldName) {
     // If the field has a subfield (nested object), update it properly
-    setOrgData({
-      ...orgData,
-      [fieldName]: {
-        ...orgData[fieldName],
-        [subFieldName]: value,
-      },
-    });
+    setOrgData({ ...orgData, [fieldName]: { ...orgData[fieldName], [subFieldName]: value, }, });
+    
   } else {
     // If it's a top-level field, update as before
     setOrgData({ ...orgData, [name]: value });
