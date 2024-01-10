@@ -4,6 +4,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 import Login from "./pages/login";
 import Register from "./pages/register";
+import Myprofile from "./pages/my_profile"
 import Home from "./pages/home";
 import Event from "./pages/event";
 import Organisation from "./pages/organisation";
@@ -29,6 +30,7 @@ function App() {
           <Route path='/organisation' element={<Organisation />} />
           <Route path='/assessment' element={<Assessment />} />
           <Route path='/candidate' element={<Candidate />} />
+          <Route path='myprofile' element={<Myprofile />} />
         </Route>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />

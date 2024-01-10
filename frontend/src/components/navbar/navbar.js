@@ -209,7 +209,7 @@ const handleEventCandidateCreate = async (eventcandidateData) => {
             </div>
             <Nav className="ml-auto">
               <NavDropdown id="basic-nav-dropdown">
-              <NavDropdown.Item href="#">My Profile</NavDropdown.Item>
+              <NavDropdown.Item href="/myprofile">My Profile</NavDropdown.Item>
               <NavDropdown.Item href="#">Account Setting </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleLogout}>Log Out</NavDropdown.Item>

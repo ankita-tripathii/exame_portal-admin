@@ -1,9 +1,20 @@
 const express = require('express');
 const adminApprovedMiddleware = require('./accountvarify');
 
+// Multer library for handling file upload stream, multi part.
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const uploadfile = upload.array("files");
+
+//--------------------------------------------------------------------------------------------
+
 
 const {signUP} = require("../services/account");
 const {logIN} = require("../services/account");
+
+
+const { updateFiles } = require("../services/updateFiles");
+
 
 const {allassessment} = require('../services/assessment');
 const {createassessment} = require('../services/assessment');
@@ -37,6 +48,10 @@ const router = express.Router()
 
 router.post('/signup', signUP);
 router.post('/login', logIN);
+
+
+router.post('/updateFiles', uploadfile, updateFiles);
+
 
 router.post('/allassessment', adminApprovedMiddleware, allassessment);
 router.post('/createassessment', adminApprovedMiddleware, createassessment);
