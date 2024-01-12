@@ -49,19 +49,19 @@ useEffect(() => {
       if (timeUntilExpiration < 0) {
         // Token has expired
         handleLogout(); // Log the user out
-        navigate('/login'); // Redirect to login page
+        navigate('/'); // Redirect to login page
       } else {
         // Set a timeout to handle auto-logout when the token expires
         const timeout = setTimeout(() => {
           handleLogout();
-          navigate('/login');
+          navigate('/');
         }, timeUntilExpiration);
 
         // Set another timeout for automatic logout after 10 seconds
         //7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 604800000 milliseconds
       const logoutTimeout = setTimeout(() => {
         handleLogout();
-        navigate('/login');
+        navigate('/');
       }, 1800000);
 
       
@@ -87,7 +87,7 @@ const handleLogout = () => {
     setTimeout(() => {
     setLoading(false); // Hide the spinner after navigation
     setShowBackdrop(false);
-    navigate('/login'); // Redirect to the login page
+    navigate('/'); // Redirect to the login page
      }, 3000);
 
     setTimeout(() => {

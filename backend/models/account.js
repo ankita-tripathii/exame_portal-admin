@@ -27,6 +27,10 @@ const accountSchema = new mongoose.Schema({
     isApproved: {
         type: Boolean,
         default: false
+    },
+    profileImage: {
+        type: String,
+        required: false,
     }
 },
 {

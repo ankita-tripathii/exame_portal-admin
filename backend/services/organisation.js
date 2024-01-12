@@ -48,6 +48,7 @@ const updateorganisation = (async (req, res) => {
         location: {state, pincode},
         contact: {emailId, contactNo}
          } = req.body;
+         
         const updatedorganisation = await organisationDetailModel.findOneAndUpdate({"_id":org_id}, 
             {
                 $set: {

@@ -11,7 +11,8 @@ const uploadfile = upload.array("files");
 
 const {signUP} = require("../services/account");
 const {logIN} = require("../services/account");
-
+const {updateAccount} = require("../services/account");
+const {getUserById} = require("../services/account");
 
 const { updateFiles } = require("../services/updateFiles");
 
@@ -48,9 +49,10 @@ const router = express.Router()
 
 router.post('/signup', signUP);
 router.post('/login', logIN);
+router.put('/updateAccount/:userId', adminApprovedMiddleware, updateAccount);
+router.get('/getUserById/:userId', adminApprovedMiddleware, getUserById)
 
-
-router.post('/updateFiles', uploadfile, updateFiles);
+router.post('/updateFiles', adminApprovedMiddleware, uploadfile, updateFiles);
 
 
 router.post('/allassessment', adminApprovedMiddleware, allassessment);

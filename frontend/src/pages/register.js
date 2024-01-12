@@ -8,7 +8,8 @@ export default function Register() {
     emailId: '',
     password: '',
     role: '',
-    isApproved: false
+    isApproved: false,
+    profileImage:'',
     });
 
    const [alertVariant, setAlertVariant] = useState('');

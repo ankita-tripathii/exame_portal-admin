@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const accountDetailModel = require('../models/account');
+const adminApprovedMiddleware = require('../routes/accountvarify');
 
 
 const signUP = (async (req, res) => {
@@ -71,7 +72,8 @@ const logIN = (async (req, res) => {
     }
 
      try{
-        const token = jwt.sign({emailId: emailExists.emailId, name: emailExists.name, role: emailExists.role, isApproved: emailExists.isApproved}, process.env.TOKEN_SECRET,  {expiresIn: '3600s' });
+        const token = jwt.sign({_id: emailExists._id, emailId: emailExists.emailId, name: emailExists.name, role: emailExists.role, isApproved: emailExists.isApproved, 
+            profileImage: emailExists.profileImage}, process.env.TOKEN_SECRET,  {expiresIn: '3600s' });
     res.status(200).json({ token: token});
     }
 
@@ -82,3 +84,67 @@ const logIN = (async (req, res) => {
 });
 
 exports.logIN = logIN;
+
+//-----------------------------------------
+
+const updateAccount = (async (req, res) => {
+try {
+    await adminApprovedMiddleware(req, res, async () => {
+
+    const  userId = req.params.userId;
+    const { 
+           name, 
+           emailId,
+           role,
+           profileImage } = req.body;
+
+   
+
+        // Find the user by ID
+        const updateuser = await accountDetailModel.findOneAndUpdate({"_id":userId},
+       {
+        $set: {
+              "name" : name,
+              "emailId" : emailId,
+              "role" : role,
+              "profileImage" : profileImage
+              }
+        },
+
+        { new: true }
+    );
+
+         if (!updateuser) {
+            return res.status(404).json({ message: "user detail not found" });
+        }
+
+        res.status(200).json({ data: updateuser , message: "user detail updated!"});
+    });
+    }catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+exports.updateAccount = updateAccount;
+
+//----------------------------------------------------------------------------------
+
+const getUserById = (async (req, res) => {
+    try {
+      await adminApprovedMiddleware(req, res, async () => {
+
+        const  userId = req.params.userId;
+        const user = await accountDetailModel.findById(userId);
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    });
+    } catch (error) {
+        console.log(error.message);  // Log the error on the server
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+exports.getUserById = getUserById;
