@@ -13,6 +13,8 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
 
          // Fetch organization names
         fetchOrganizations();
+        
+        setSelectedOrg(assessment?.organisation_id?.org_name || '');
 
     }, [assessment]);
 
@@ -64,7 +66,6 @@ const UpdateAssessmentModal = ({ show, handleClose, handleUpdate, assessment }) 
     };
 
     const handleSelectOrg = (orgName) => {
-        setSelectedOrg(orgName);
         setUpdatedAssessment({ ...updatedAssessment, org_name: orgName });
     };
 
