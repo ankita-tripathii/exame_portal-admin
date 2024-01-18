@@ -15,6 +15,7 @@ const {updateAccount} = require("../services/account");
 const {getUserById} = require("../services/account");
 
 const { updateFiles } = require("../services/updateFiles");
+const { csvUpload } = require("../services/CSVUpload");
 
 
 const {allassessment} = require('../services/assessment');
@@ -53,6 +54,7 @@ router.put('/updateAccount/:userId', adminApprovedMiddleware, updateAccount);
 router.get('/getUserById/:userId', adminApprovedMiddleware, getUserById)
 
 router.post('/updateFiles', adminApprovedMiddleware, uploadfile, updateFiles);
+router.get('/csvUpload', adminApprovedMiddleware, csvUpload);
 
 
 router.post('/allassessment', adminApprovedMiddleware, allassessment);

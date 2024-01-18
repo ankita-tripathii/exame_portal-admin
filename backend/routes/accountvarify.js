@@ -17,7 +17,7 @@ module.exports = function async (req, res, next) {
                     console.log("-----");
 
                     const allowedRoutesForDeliveryHead = ['allassessment', 'allevent', 'allcandidate', 'allorganisation', 
-                        'updateAccount', 'updateFiles', 'getUserById'];
+                        'updateAccount', 'updateFiles', 'getUserById', 'csvUpload'];
 
                     const apiPath = req.originalUrl.split("/")[2];
                     const finalaApiPath = GetPathFromUrl(apiPath);
