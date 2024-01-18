@@ -57,6 +57,8 @@ const csvUpload = (async (req, res) => {
         })
         );
 
+         csvobject.reverse();
+
         console.log(csvobject)
  
         const headers = ["Assessment Title", "Organisation Name", "Start Date", "Late Login Duration", "End Date", "Time Zone"];
