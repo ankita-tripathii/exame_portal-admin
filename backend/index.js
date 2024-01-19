@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors'); //new add
 const routes = require('./routes/routes');
 const accountdashboard = require('./routes/accountdashboard');
+const csvUploadRoute = require('./routes/csvupload');
 
 require('dotenv').config();   //new add
 
@@ -85,3 +86,5 @@ app.get("/healthcheck", (req, res, next) => {
 
 app.use('/api', routes);
 app.use('/api', accountdashboard);
+// Use the new csvUpload route
+app.use('/api', csvUploadRoute);

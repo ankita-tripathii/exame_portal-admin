@@ -36,7 +36,7 @@ const csvUpload = (async (req, res) => {
 
         const eventData = await assessmenteventDetailModel.find();
 
-        console.log('eventData:', eventData);
+        // console.log('eventData:', eventData);
 
         const csvobject = await Promise.all(eventData.map ( async(event) => {
 
@@ -59,22 +59,25 @@ const csvUpload = (async (req, res) => {
 
          csvobject.reverse();
 
-        console.log(csvobject)
+        // console.log(csvobject)
  
         const headers = ["Assessment Title", "Organisation Name", "Start Date", "Late Login Duration", "End Date", "Time Zone"];
         const dataToCSV = createDataForCSV(csvobject, headers);
 
-        console.log(dataToCSV)
+        // console.log(dataToCSV)
 
         let fileNameId = uuidv4();
         fileName = "test"+fileNameId+".csv";
 
+        // Write CSV file to disk
         await writeToCsv(dataToCSV,fileName);
 
+        
+        // Continue with S3 upload and response handling
         const resp = await uploadons3(fileName, './uploads/'+fileName);
         if(resp && resp.filePath) {
            await Fs.rmSync('./uploads/'+fileName);
-            res.status(200).json({ message: 'CSV uploaded successfully :' + resp.filePath });
+            res.status(200).json({ message: 'CSV uploaded successfully :',filePath:resp.filePath });
         }
 
   }

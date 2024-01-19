@@ -9,6 +9,8 @@ import { Pagination } from 'react-bootstrap';
 import SearchBar from './searchbar';
 import { jwtDecode} from 'jwt-decode'; 
 
+import { saveAs } from 'file-saver';
+
 import { Alert } from "react-bootstrap";
 
 const EventsList = () => {
@@ -129,6 +131,39 @@ const handleSearch = (e) => {
   }
 };
    
+   const handleExportCsv = (async () => {
+        try {
+            const authToken = localStorage.getItem('token');
+            const response = await fetch('http://localhost:5000/api/csvUpload', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': authToken,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to export CSV');
+            }
+
+            const result = await response.json();
+            
+            console.log(result.message);
+
+               // Trigger file download using the provided URL
+             const downloadLink = document.createElement('a');
+             downloadLink.href = result.filePath;
+             console.log('Server Response:', result.filePath);
+             downloadLink.download = 'exportedFile.csv';
+             downloadLink.click();
+         } catch (error) {
+             console.error('Error exporting CSV:', error);
+             // Handle errors if needed
+         }
+           });
+
+
+
     return (
       <>
             <Container>
@@ -139,7 +174,8 @@ const handleSearch = (e) => {
             {(userRole === 'admin' && userApproved)  && (
             <Col lg={5} className={styles.heading}>
                <div className="ml-auto">
-                    <button className="btn btn-primary mr-2" onClick={handleShowModal} >Create Event</button>
+                    <button className="btn btn-primary mr-2" onClick={handleShowModal} >Create Event</button>{'  '}
+                     <button className="btn btn-primary mr-2" onClick={handleExportCsv} >Export CSV</button>
                 </div>
             </Col>
           )}
