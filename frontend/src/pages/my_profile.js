@@ -1,4 +1,8 @@
 import React, { useState, useRef, useEffect  } from 'react';
+
+import { useDispatch } from 'react-redux';
+import { updateUserInfo } from '../redux/action/action'; // Create this action file
+
 import DNavbar from "../components/navbar/navbar";
 import FooterExample from "../components/footer/footer";
 import { PencilSquare } from 'react-bootstrap-icons';
@@ -8,6 +12,10 @@ import { jwtDecode} from 'jwt-decode';
 import { Alert } from "react-bootstrap";
 
 function Myprofile() {
+
+  const dispatch = useDispatch();
+
+  //-----------------------------------------------------------
 
   const [alertVariant, setAlertVariant] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
@@ -59,6 +67,7 @@ function Myprofile() {
           role: data.role || 'admin', // Set the default role as needed
         });
         setProfileImage(data.profileImage || '');
+
       } else {
         console.error('Failed to fetch user data:', data.error);
       }
@@ -150,6 +159,9 @@ function Myprofile() {
         setAlertMessage(result.message);
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 3000); // Close success alert after 1 seconds
+
+        // Dispatch action to update Redux store with updated user data
+        dispatch(updateUserInfo({ name: userData.name, role: userData.role }));
 
       } else {
 

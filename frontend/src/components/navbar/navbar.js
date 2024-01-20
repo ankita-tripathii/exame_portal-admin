@@ -13,16 +13,23 @@
   import { useNavigate } from 'react-router-dom';
   import EventCandidateCreateModal from '../event_candidate/event_candidate_create_modal';
 
+  import { useSelector } from 'react-redux';
+
 
   const DNavbar = () => {
+
+  const userName = useSelector((state) => state.user.name);
+  const userRole = useSelector((state) => state.user.role);
+
+  //---------------------------------------------------------  
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showBackdrop, setShowBackdrop] = useState(false); // State for faded background
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
 
-  const [userName, setUserName] = useState('');
-  const [userRole, setUserRole] = useState('');
+  // const [userName, setUserName] = useState('');
+  // const [userRole, setUserRole] = useState('');
   const [userApproved, setUserApproved] = useState('');
 
   const [show, setShow] = useState(false);
@@ -36,8 +43,8 @@ useEffect(() => {
 
     if (authToken) {
       const decodedToken = jwtDecode(authToken);
-      setUserName(decodedToken.name);
-      setUserRole(decodedToken.role);
+      // setUserName(decodedToken.name);
+      // setUserRole(decodedToken.role);
       setUserApproved(decodedToken.isApproved);
 
       // Extract expiration time from the token and calculate remaining time
